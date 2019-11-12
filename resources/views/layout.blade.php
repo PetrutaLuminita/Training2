@@ -48,6 +48,10 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+            img {
+                height: 250px;
+                width: 250px;
+            }
 
             .help-is-danger {
                 color: red;
@@ -59,15 +63,15 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </head>
     <body>
-        @if (Route::has('login'))
+        <?php if (Route::has('login')) : ?>
             <div class="top-right links">
-                @if (session('admin'))
+                <?php if (session('admin')) : ?>
                     <a href="{{ route('admin.products.index') }}">{{ __('All products') }}</a>
-                @else
+                <?php else : ?>
                     <a href="{{ route('login') }}">{{ __('Login') }}</a>
-                @endif
+                <?php endif ?>
             </div>
-        @endif
+        <?php endif ?>
 
         <div class="content">
             <div class="title m-b-md">

@@ -29,6 +29,7 @@ class ProductAdminController extends Controller
     {
         return $this->validate(request(), [
             'title' => 'required',
+            'description' => 'nullable',
             'price' => 'required|numeric'
         ]);
     }
@@ -54,31 +55,23 @@ class ProductAdminController extends Controller
      */
     public function save(Request $request, Product $product)
     {
-        if ($this->validateProduct()) {
-            if (!isset($product)) {
-                $product = new Product();
-            }
+        $validData = $this->validateProduct();
 
-            $data = $request->only([
-                'title',
-                'description',
-                'price'
-            ]);
+        $product->fill($validData);
+        $product->save();
 
-            $product->fill($data);
+        if ($request->hasFile('image')) {
+            $fileName = $product->getKey() . '.' . $request->file('image')->getClientOriginalExtension();
 
-            $product->save();
-
-            if ($request->hasFile('image')) {
-                $fileName = $product->getKey() . '.' . $request->file('image')->getClientOriginalExtension();
+            // save image in storage
+            if ($request->file('image')->storeAs('public/images', $fileName)) {
+                // save product image
                 $product->image_url = $fileName;
-                $request->file('image')->storeAs('public/images', $fileName);
-
                 $product->save();
             }
-
-            return redirect()->route('admin.products.index');
         }
+
+        return redirect()->route('admin.products.index');
     }
 
     /**
@@ -90,7 +83,7 @@ class ProductAdminController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product::query()->find($product->getKey())->delete();
+        $product->delete();
         
         return redirect()->route('admin.products.index');
     }

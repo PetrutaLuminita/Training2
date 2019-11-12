@@ -25,7 +25,8 @@ class SendEmailRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email',
+            'comments' => 'nullable'
         ];
     }
 }

@@ -16,10 +16,10 @@
             <?php foreach ($products as $product) : /** @var \App\Product $product */ ?>
                 <tr>
                     <td class="align-middle">
-                        <?php if (!$product->image_url) : ?>
+                        <?php if (!$product->image) : ?>
                             <div>{{ __('No image available') }}</div>
                         <?php else : ?>
-                            <img src="{{ $product->image() }}" height="250px" width="250px">
+                            <img src="{{ $product->image }}">
                         <?php endif ?>
                     </td>
 
@@ -28,11 +28,11 @@
 
                         <div class="font-weight-normal mb-2">{{ __('Description ') . $product->description }}</div>
 
-                        <strong class="font-italic">{{ __('Price ') . $product->price }}</strong>
+                        <div class="font-italic">{{ __('Price ') . $product->price }}</div>
                     </td>
 
                     <td class="text-center align-middle">
-                        <a href="{{ route('products.add_to_cart', ['product' => $product->getKey()]) }}"  class="btn btn-primary">{{ __('Add to cart') }}</a>
+                        <a href="{{ route('products.add_to_cart', ['product' => $product->getKey()]) }}" class="btn btn-primary">{{ __('Add to cart') }}</a>
                     </td>
                 </tr>
             <?php endforeach ?>

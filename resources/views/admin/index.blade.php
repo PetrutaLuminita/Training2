@@ -16,10 +16,10 @@
             <?php foreach ($products as $product) : /** @var \App\Product $product */ ?>
             <tr>
                 <td class="align-middle">
-                    <?php if (!$product->image_url) : ?>
+                    <?php if (!$product->image) : ?>
                         <div>{{ __('No image available') }}</div>
                     <?php else : ?>
-                        <img src="{{ $product->image() }}" height="250px" width="250px">
+                        <img src="{{ $product->image }}">
                     <?php endif ?>
                 </td>
 
@@ -28,12 +28,12 @@
 
                     <div class="font-weight-normal mb-2">{{ __('Description ') . $product->description }}</div>
 
-                    <strong class="font-italic">{{ __('Price ') . $product->price }}</strong>
+                    <div class="font-italic">{{ __('Price ') . $product->price }}</div>
                 </td>
 
                 <td class="text-center align-middle">
-                    <a href="{{ route('admin.products.edit', ['product' => $product->getKey()]) }}"  class="btn btn-primary">{{ __('Edit') }}</a>
-                    <a href="{{ route('admin.products.delete', ['product' => $product->getKey()]) }}"  class="btn btn-primary">{{ __('Delete') }}</a>
+                    <a href="{{ route('admin.products.edit', ['product' => $product->getKey()]) }}" class="btn btn-primary">{{ __('Edit') }}</a>
+                    <a href="{{ route('admin.products.delete', ['product' => $product->getKey()]) }}" class="btn btn-primary">{{ __('Delete') }}</a>
                 </td>
             </tr>
             <?php endforeach ?>

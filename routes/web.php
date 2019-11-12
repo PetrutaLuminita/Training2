@@ -21,7 +21,6 @@ Route::get('/add_to_cart/{product}', 'ProductController@addToCart')->name('produ
 Route::get('/remove_from_cart/{product}', 'ProductController@removeFromCart')->name('products.remove_from_cart');
 Route::post('/cart', 'ProductController@checkout')->name('checkout');
 
-
 Route::middleware(['admin'])->group(function() {
     Route::get('/products', 'ProductAdminController@index')->name('admin.products.index');
     Route::get('/products/create', 'ProductAdminController@edit')->name('admin.products.create');
@@ -29,4 +28,13 @@ Route::middleware(['admin'])->group(function() {
     Route::get('/products/{product}/edit', 'ProductAdminController@edit')->name('admin.products.edit');
     Route::put('/products/{product}/edit', 'ProductAdminController@save')->name('admin.products.update');
     Route::get('/products/{product}/delete', 'ProductAdminController@destroy')->name('admin.products.delete');
+});
+
+Route::get('/test', function(){
+
+    /** @var \App\Product $p */
+    $p = \App\Product::query()->first();
+
+//    dd($p->start_date);
+    return $p;
 });

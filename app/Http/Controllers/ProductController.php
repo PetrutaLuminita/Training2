@@ -16,10 +16,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        if (!session('cart')) {
-            $products = Product::all();
+        if ($productIds = session()->get('cart')) {
+            $products = Product::query()->whereNotIn('id', $productIds)->get();
         } else {
-            $products = Product::query()->whereNotIn('id', session('cart'))->get();
+            $products = Product::all();
         }
 
         return view('products.index', ['products' => $products]);
@@ -34,8 +34,8 @@ class ProductController extends Controller
     {
         $products = [];
 
-        if (!empty(session()->get('cart'))) {
-            $products = Product::query()->whereIn('id', session('cart'))->get();
+        if ($productIds = session()->get('cart')) {
+            $products = Product::query()->whereIn('id', $productIds)->get();
         }
 
         return view('products.cart', ['products' => $products]);
@@ -84,20 +84,19 @@ class ProductController extends Controller
      */
     public function checkout(SendEmailRequest $request)
     {
-        if ($request->validated()) {
-            $products = Product::query()->whereIn('id', session('cart'))->get();
+        $validData = $request->validated();
 
-            Mail::to(config('app.manager_email'))->send(new Order(
-                $products,
-                $request->get('name'),
-                $request->get('email'),
-                $request->get('comments')
-            ));
+        $products = Product::query()->whereIn('id', session('cart'))->get();
 
-            session()->forget('cart');
+        Mail::to(config('app.manager_email'))->send(new Order(
+            $products,
+            $validData['name'],
+            $validData['email'],
+            $validData['comments']
+        ));
 
-            return redirect()->route('products.index');
-        }
+        session()->forget('cart');
 
+        return redirect()->route('products.index');
     }
 }
