@@ -50,7 +50,6 @@
             <input class="input form-control @error('title') is-invalid @enderror" type="text" placeholder="{{ __('Name') }}" name="name" value="{{ old('name') }}">
             @component('partials.error', ['field_name' => 'name']) @endcomponent
 
-
             <input class="input form-control" type="text" placeholder="{{ __('Email') }}" name="email" value="{{ old('email') }}">
             @component('partials.error', ['field_name' => 'email']) @endcomponent
 
