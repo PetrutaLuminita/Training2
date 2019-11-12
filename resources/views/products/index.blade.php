@@ -1,11 +1,11 @@
 <?php
-    /** @var \App\Product $products */
+/** @var \App\Product $products */
 ?>
 
 @extends('layout')
 
 @section('title')
-     {{ __('Products') }}
+    {{ __('Products') }}
 @endsection
 
 @section('content')
@@ -15,33 +15,28 @@
         <?php else: ?>
             <?php foreach ($products as $product) : /** @var \App\Product $product */ ?>
                 <tr>
-                    <td rowspan="3">
+                    <td class="align-middle">
                         <?php if (!$product->image_url) : ?>
                             <div>{{ __('No image available') }}</div>
                         <?php else : ?>
                             <img src="{{ $product->image() }}" height="250px" width="250px">
                         <?php endif ?>
                     </td>
-                    <td>
-                        <h5>{{ $product->title }}</h5>
+
+                    <td class="align-middle">
+                        <h5 class="font-weight-bold mb-2">{{ $product->title }}</h5>
+
+                        <div class="font-weight-normal mb-2">{{ __('Description ') . $product->description }}</div>
+
+                        <strong class="font-italic">{{ __('Price ') . $product->price }}</strong>
                     </td>
-                    <td rowspan="3" class="text-center">
+
+                    <td class="text-center align-middle">
                         <a href="{{ route('products.add_to_cart', ['product' => $product->getKey()]) }}"  class="btn btn-primary">{{ __('Add to cart') }}</a>
                     </td>
                 </tr>
-
-                <tr>
-                    <td>{{ __('Description ') . $product->description }}</td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong>{{ __('Price ') . $product->price }}</strong>
-                    </td>
-                </tr>
-
             <?php endforeach ?>
         <?php endif ?>
-
     </table>
 
     <a href="{{ route('products.cart') }}" class="btn btn-primary mb-4">{{ __('Go to cart') }}</a>

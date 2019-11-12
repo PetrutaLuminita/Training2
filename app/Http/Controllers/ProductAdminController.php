@@ -67,13 +67,15 @@ class ProductAdminController extends Controller
 
             $product->fill($data);
 
+            $product->save();
+
             if ($request->hasFile('image')) {
                 $fileName = $product->getKey() . '.' . $request->file('image')->getClientOriginalExtension();
                 $product->image_url = $fileName;
                 $request->file('image')->storeAs('public/images', $fileName);
-            }
 
-            $product->save();
+                $product->save();
+            }
 
             return redirect()->route('admin.products.index');
         }

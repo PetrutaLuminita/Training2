@@ -15,7 +15,7 @@
         <?php else: ?>
             <?php foreach ($products as $product) : /** @var \App\Product $product */ ?>
                 <tr>
-                    <td rowspan="3">
+                    <td class="align-middle">
                         <?php if (!$product->image_url) : ?>
                             <div>{{ __('No image available') }}</div>
                         <?php else : ?>
@@ -23,25 +23,18 @@
                         <?php endif ?>
                     </td>
 
-                    <td>
-                        <h5>{{ $product->title }}</h5>
+                    <td class="align-middle">
+                        <h5 class="font-weight-bold mb-2">{{ $product->title }}</h5>
+
+                        <div class="font-weight-normal mb-2">{{ __('Description ') . $product->description }}</div>
+
+                        <strong class="font-italic">{{ __('Price ') . $product->price }}</strong>
                     </td>
-                    <td rowspan="3" class="text-center">
+                    
+                    <td class="text-center align-middle">
                         <a href="{{ route('products.remove_from_cart', ['product' => $product->getKey()]) }}"  class="btn btn-primary">{{ __('Remove from cart') }}</a>
                     </td>
                 </tr>
-
-                <tr>
-                    <td>{{ __('Description ') . $product->description }}</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <strong>{{ __('Price ') . $product->price }}</strong>
-                    </td>
-                </tr>
-
-
             <?php endforeach ?>
         <?php endif ?>
     </table>
@@ -64,7 +57,7 @@
             <textarea class="textarea form-control" placeholder="{{ __('Comments') }}" name="comments">{{ old('comments') }}</textarea>
             @component('partials.error', ['field_name' => 'comments']) @endcomponent
 
-            <button class="btn btn-primary" type="submit">{{ __('Checkout') }}</button>
+            <button class="btn btn-primary mt-2" type="submit">{{ __('Checkout') }}</button>
         </form>
     <?php endif ?>
 @endsection
