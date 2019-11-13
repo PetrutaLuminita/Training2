@@ -8,7 +8,12 @@
     {{ __('Products') }}
 @endsection
 
+@section('scripts')
+    <script src="{{ asset('homepage.js') }}"></script>
+@endsection
+
 @section('content')
+
     <table class="table">
         <?php if (empty($products)) : ?>
             <div>{{ __('All products are in cart') }}</div>

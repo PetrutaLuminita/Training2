@@ -15,6 +15,8 @@ Route::get('/login', 'LoginController@show')->name('show.login');
 Route::post('/login', 'LoginController@login')->name('login');
 Route::get('/logout', 'LoginController@logout')->name('logout');
 
+
+Route::get('/get_products', 'ProductController@getProducts')->name('products.get_products');
 Route::get('/', 'ProductController@index')->name('products.index');
 Route::get('/cart', 'ProductController@cart')->name('products.cart');
 Route::get('/add_to_cart/{product}', 'ProductController@addToCart')->name('products.add_to_cart');
@@ -28,13 +30,4 @@ Route::middleware(['admin'])->group(function() {
     Route::get('/products/{product}/edit', 'ProductAdminController@edit')->name('admin.products.edit');
     Route::put('/products/{product}/edit', 'ProductAdminController@save')->name('admin.products.update');
     Route::get('/products/{product}/delete', 'ProductAdminController@destroy')->name('admin.products.delete');
-});
-
-Route::get('/test', function(){
-
-    /** @var \App\Product $p */
-    $p = \App\Product::query()->first();
-
-//    dd($p->start_date);
-    return $p;
 });

@@ -12,12 +12,11 @@ use Illuminate\Support\Facades\Mail;
 class ProductController extends Controller
 {
     /**
-     * Show products that are not in the cart
+     * Get products from DB not in the cart
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Builder[]|Collection|mixed[]
      */
-    public function index()
-    {
+    public function getProducts() {
         $products = Product::query()
             ->when(session()->get('cart'), function ($q, $v) {
                 /** @var Builder $q */
@@ -25,7 +24,17 @@ class ProductController extends Controller
             })
             ->get();
 
-        return view('products.index', ['products' => $products]);
+        return $products;
+    }
+
+    /**
+     * Show products that are not in the cart
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        return view('products.index');
     }
 
     /**
