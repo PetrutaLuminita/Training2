@@ -1,7 +1,7 @@
 <?php
     /** @var  \Illuminate\Support\ViewErrorBag $errors*/
     /** @var string $fieldName */
-    /** @var \Illuminate\Support\MessageBag $message */
+    /** @var string $message */
 ?>
 
 <?php if (!empty($errors->get($fieldName))) : ?>
@@ -9,4 +9,3 @@
         <div class="help-is-danger">{{ $message }}</div>
     <?php endforeach ?>
 <?php endif ?>
-

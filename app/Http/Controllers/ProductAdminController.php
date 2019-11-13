@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\ValidateProductRequest;
 use App\Product;
 
 class ProductAdminController extends Controller
@@ -20,21 +20,6 @@ class ProductAdminController extends Controller
     }
 
     /**
-     * Check if the details of the product are correct
-     *
-     * @return array
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    protected function validateProduct()
-    {
-        return $this->validate(request(), [
-            'title' => 'required',
-            'description' => 'nullable',
-            'price' => 'required|numeric'
-        ]);
-    }
-
-    /**
      * Display a form to add/edit a product
      *
      * @param Product $product
@@ -45,17 +30,17 @@ class ProductAdminController extends Controller
         return view('admin.edit', ['product' => $product]);
     }
 
+
     /**
      * Persist the new product or the edited one
      *
-     * @param Request $request
+     * @param ValidateProductRequest $request
      * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \Illuminate\Validation\ValidationException
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function save(Request $request, Product $product)
+    public function save(ValidateProductRequest $request, Product $product)
     {
-        $validData = $this->validateProduct();
+        $validData = $request->validated();
 
         $product->fill($validData);
         $product->save();

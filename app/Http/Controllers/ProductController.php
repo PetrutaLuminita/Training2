@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SendEmailRequest;
+use App\Http\Requests\CheckoutRequest;
 use App\Mail\Order;
 use App\Product;
 use Illuminate\Database\Eloquent\Builder;
@@ -82,10 +82,10 @@ class ProductController extends Controller
     /**
      * Check if the input for the email is correct and send the email
      *
-     * @param SendEmailRequest $request
+     * @param CheckoutRequest $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function checkout(SendEmailRequest $request)
+    public function checkout(CheckoutRequest $request)
     {
         $validData = $request->validated();
 
