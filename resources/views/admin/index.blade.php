@@ -5,7 +5,7 @@
 @extends('layout')
 
 @section('title')
-    {{__('All products') }}
+    {{ __('All products') }}
 @endsection
 
 @section('content')
@@ -40,7 +40,7 @@
         <?php endif ?>
     </table>
 
-    <a href="{{ route('admin.products.create') }}" class="btn btn-primary">{{ __('Add') }}</a>
-    <a href="{{ route('logout') }}" class="btn btn-primary">{{ __('Logout') }}</a><br><br>
+    <a href="{{ route('admin.products.create') }}" class="btn btn-primary mb-2">{{ __('Add') }}</a>
+    <a href="{{ route('logout') }}" class="btn btn-primary mb-2">{{ __('Logout') }}</a>
 
 @endsection

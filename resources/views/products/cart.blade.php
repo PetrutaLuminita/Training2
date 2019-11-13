@@ -39,7 +39,7 @@
         <?php endif ?>
     </table>
 
-    <a href="{{ route('products.index') }}" class="btn btn-primary">{{ __('Go to index') }}</a><br><br>
+    <a href="{{ route('products.index') }}" class="btn btn-primary mb-2">{{ __('Go to index') }}</a>
 
     <?php if (!empty($products)) : ?>
         <h4>{{ __('Contact details') }}</h4>

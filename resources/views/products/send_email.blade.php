@@ -9,7 +9,7 @@
 {{ __('Order from') . ': ' }}<div>{{ $customer }}</div><br>
 {{ __('Email') . ': ' }}<div>{{ $email }}</div><br>
 {{ __('Comments regarding the order') . ': ' }}<div>{{ $comments ? $comments : __('No comments') }}</div><br>
-{{ __('Products ordered:') }} <br>
+{{ __('Products ordered') . ': '}} <br>
 
 <table class="table">
     <?php foreach ($products as $product) : ?>
@@ -29,7 +29,7 @@
                  <div>{{ __('Price ') . ': ' . $product->price }}</div>
              </td>
          </tr>
-        <?php endforeach ?>
-     </table>
+    <?php endforeach ?>
+</table>
 
 @endcomponent
