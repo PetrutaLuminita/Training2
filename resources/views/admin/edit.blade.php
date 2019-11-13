@@ -33,7 +33,7 @@
                 <div class="text-left">{{ __('No image uploaded') }}</div>
             <?php endif ?>
 
-            <input class="input form control text-left mb-2" type="file" name="image" value="{{ old('image', $product->image_url) }}">
+            <input class="input form control text-left mb-2" type="file" name="image" value="{{ old('image', $product->image_path) }}"><br>
             @component('partials.error', ['fieldName' => 'image']) @endcomponent
 
             <button class="btn btn-primary" type="submit">{{ $product->getKey() ? __('Update') : __('Add') }}</button>

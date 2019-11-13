@@ -3,12 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 
 /**
- * @property string image_url
+ * @property string image_path
  * @property string image
- * @property Carbon start_date
  */
 class Product extends Model
 {
@@ -21,8 +19,9 @@ class Product extends Model
     ];
 
     protected $hidden = [
-        'image_url'
+        'image_path'
     ];
+
     /**
      * Return the full path to the image of the product
      *
@@ -30,10 +29,10 @@ class Product extends Model
      */
     public function getImageAttribute()
     {
-        if (!$this->image_url) {
+        if (!$this->image_path) {
             return '';
         }
 
-        return env('APP_URL') . '/storage/images/' . $this->image_url;
+        return env('APP_URL') . '/storage/images/' . $this->image_path;
     }
 }

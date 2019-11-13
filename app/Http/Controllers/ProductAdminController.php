@@ -66,7 +66,7 @@ class ProductAdminController extends Controller
             // save image in storage
             if ($request->file('image')->storeAs('public/images', $fileName)) {
                 // save product image
-                $product->image_url = $fileName;
+                $product->image_path = $fileName;
                 $product->save();
             }
         }
