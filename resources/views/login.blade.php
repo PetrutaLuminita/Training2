@@ -11,7 +11,7 @@
 @section('content')
     <div class="container">
         <?php if ($errors->any()) : ?>
-            <?php foreach ($errors->all() as $error) : /** @var \Illuminate\Support\MessageBag $error */ ?>
+            <?php foreach ($errors->all() as $error) : /** @var string $error */ ?>
                     <div class="help-is-danger">{{ $error }}</div>
             <?php endforeach ?>
         <?php endif ?>
