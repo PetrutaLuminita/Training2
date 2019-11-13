@@ -1,5 +1,5 @@
 <?php
-/** @var \Illuminate\Support\ViewErrorBag $errors */
+    /** @var \Illuminate\Support\ViewErrorBag $errors */
 ?>
 
 @extends('layout')

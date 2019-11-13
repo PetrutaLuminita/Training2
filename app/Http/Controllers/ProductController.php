@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SendEmailRequest;
 use App\Mail\Order;
 use App\Product;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
 
 class ProductController extends Controller
@@ -16,11 +18,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        if ($productIds = session()->get('cart')) {
-            $products = Product::query()->whereNotIn('id', $productIds)->get();
-        } else {
-            $products = Product::all();
-        }
+        $products = Product::query()
+            ->when(session()->get('cart'), function ($q, $v) {
+                /** @var Builder $q */
+                return $q->whereNotIn('id', $v);
+            })
+            ->get();
 
         return view('products.index', ['products' => $products]);
     }
@@ -32,7 +35,7 @@ class ProductController extends Controller
      */
     public function cart()
     {
-        $products = [];
+        $products = new Collection();
 
         if ($productIds = session()->get('cart')) {
             $products = Product::query()->whereIn('id', $productIds)->get();

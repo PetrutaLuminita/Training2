@@ -1,6 +1,6 @@
 <?php
-/** @var \App\Product $products */
-/** @var \App\Product $product */
+    /** @var \Illuminate\Database\Eloquent\Collection $products */
+    /** @var \App\Product $product */
 ?>
 
 @component('mail::message')

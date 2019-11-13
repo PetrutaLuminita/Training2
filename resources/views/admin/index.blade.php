@@ -1,5 +1,5 @@
 <?php
-    /** @var \App\Product $products */
+    /** @var \Illuminate\Database\Eloquent\Collection $products */
 ?>
 
 @extends('layout')
@@ -26,14 +26,14 @@
                 <td class="align-middle">
                     <h5 class="font-weight-bold mb-2">{{ $product->title }}</h5>
 
-                    <div class="font-weight-normal mb-2">{{ __('Description ') . $product->description }}</div>
+                    <div class="font-weight-normal mb-2">{{ __('Description') . ': ' . $product->description }}</div>
 
-                    <div class="font-italic">{{ __('Price ') . $product->price }}</div>
+                    <div class="font-italic">{{ __('Price') . ': ' . $product->price }}</div>
                 </td>
 
                 <td class="text-center align-middle">
-                    <a href="{{ route('admin.products.edit', ['product' => $product->getKey()]) }}" class="btn btn-primary">{{ __('Edit') }}</a>
-                    <a href="{{ route('admin.products.delete', ['product' => $product->getKey()]) }}" class="btn btn-primary">{{ __('Delete') }}</a>
+                    <a href="{{ route('admin.products.edit', ['product' => $product]) }}" class="btn btn-primary">{{ __('Edit') }}</a>
+                    <a href="{{ route('admin.products.delete', ['product' => $product]) }}" class="btn btn-primary">{{ __('Delete') }}</a>
                 </td>
             </tr>
             <?php endforeach ?>
