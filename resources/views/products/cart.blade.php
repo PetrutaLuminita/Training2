@@ -30,8 +30,8 @@
 
                         <div class="font-italic">{{ __('Price') . ': ' . $product->price }}</div>
                     </td>
-                    
-                    <td class="text-center align-middle">
+
+                    <td class="text-center align-middle to-center">
                         <a href="{{ route('products.remove_from_cart', ['product' => $product]) }}" class="btn btn-primary">{{ __('Remove from cart') }}</a>
                     </td>
                 </tr>

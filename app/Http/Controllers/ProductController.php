@@ -8,6 +8,7 @@ use App\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
+use MongoDB\BSON\Javascript;
 
 class ProductController extends Controller
 {
@@ -17,6 +18,7 @@ class ProductController extends Controller
      * @return Builder[]|Collection|mixed[]
      */
     public function getProducts() {
+        request('user');
         $products = Product::query()
             ->when(session()->get('cart'), function ($q, $v) {
                 /** @var Builder $q */
@@ -50,31 +52,32 @@ class ProductController extends Controller
             $products = Product::query()->whereIn('id', $productIds)->get();
         }
 
-        return view('products.cart', ['products' => $products]);
+        return $products;
+//        return view('products.cart', ['products' => $products]);
     }
 
     /**
      * Add the id of the project in the session
      *
      * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse
+     * @return string
      */
     public function addToCart(Product $product)
     {
-        $id = $product->getKey();
+        $key = $product->getKey();
 
-        if (!session('cart') || !in_array($id, session('cart'))) {
-            session()->push('cart', $id);
+        if (!session('cart') || !in_array($key, session('cart'))) {
+            session()->push('cart', $key);
         }
 
-        return back();
+        return "Product $product->title was successfully added";
     }
 
     /**
      * Remove the id of the product from the session
      *
      * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse
+     * @return string
      */
     public function removeFromCart(Product $product)
     {
@@ -85,7 +88,7 @@ class ProductController extends Controller
             session()->forget('cart.' . $pos);
         }
 
-        return back();
+        return "Product $product->title was successfully removed";
     }
 
     /**
