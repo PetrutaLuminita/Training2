@@ -8,7 +8,6 @@ use App\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
-use MongoDB\BSON\Javascript;
 
 class ProductController extends Controller
 {
@@ -17,8 +16,8 @@ class ProductController extends Controller
      *
      * @return Builder[]|Collection|mixed[]
      */
-    public function getProducts() {
-        request('user');
+    public function getProducts()
+    {
         $products = Product::query()
             ->when(session()->get('cart'), function ($q, $v) {
                 /** @var Builder $q */
@@ -44,7 +43,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function cart()
+    public function getCartProducts()
     {
         $products = new Collection();
 
@@ -53,7 +52,17 @@ class ProductController extends Controller
         }
 
         return $products;
-//        return view('products.cart', ['products' => $products]);
+    }
+
+    public function cartForCheckout()
+    {
+        $products = new Collection();
+
+        if ($productIds = session()->get('cart')) {
+            $products = Product::query()->whereIn('id', $productIds)->get();
+        }
+
+        return view('products.cart', ['products' => $products]);
     }
 
     /**
@@ -70,7 +79,7 @@ class ProductController extends Controller
             session()->push('cart', $key);
         }
 
-        return "Product $product->title was successfully added";
+        return __('Product') . ' ' . $product->title . ' ' . __('was successfully added');
     }
 
     /**
@@ -88,7 +97,7 @@ class ProductController extends Controller
             session()->forget('cart.' . $pos);
         }
 
-        return "Product $product->title was successfully removed";
+        return __('Product') . ' ' . $product->title . ' ' . __('was successfully removed');
     }
 
     /**

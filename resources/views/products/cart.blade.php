@@ -10,7 +10,7 @@
 
 @section('content')
     <table class="table">
-        <?php if (empty($products)) : ?>
+        <?php if ($products->isEmpty()) : ?>
             <div>{{ __('There are no products in cart') }}</div>
         <?php else: ?>
             <?php foreach ($products as $product) : /** @var \App\Product $product */ ?>
@@ -41,7 +41,7 @@
 
     <a href="{{ route('products.index') }}" class="btn btn-primary mb-2">{{ __('Go to index') }}</a>
 
-    <?php if (!empty($products)) : ?>
+    <?php if (!$products->isEmpty()) : ?>
         <h4>{{ __('Contact details') }}</h4>
 
         <form method="POST" action="" class="form-group">

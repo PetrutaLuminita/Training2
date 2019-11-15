@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property string image_path
  * @property string image
+ * @property string title
+ * @property string description
+ * @property integer price
  */
 class Product extends Model
 {
