@@ -16,7 +16,7 @@ Route::post('/login', 'LoginController@login')->name('login');
 Route::get('/logout', 'LoginController@logout')->name('logout');
 
 
-Route::get('/get_products', 'ProductController@getProducts')->name('products.get_products');
+Route::get('/get_products', 'ProductController@getProducts');
 Route::get('/', 'ProductController@index')->name('products.index');
 Route::get('/cart', 'ProductController@getCartProducts')->name('products.cart');
 Route::get('/cart_checkout', 'ProductController@cartForCheckout')->name('products.cart.checkout');
@@ -25,10 +25,12 @@ Route::get('/remove_from_cart/{product}', 'ProductController@removeFromCart')->n
 Route::post('/cart_checkout', 'ProductController@checkout')->name('checkout');
 
 Route::middleware(['admin'])->group(function() {
+    Route::get('/get_all_products', 'ProductAdminController@getAllProducts');
     Route::get('/products', 'ProductAdminController@index')->name('admin.products.index');
     Route::get('/products/create', 'ProductAdminController@edit')->name('admin.products.create');
     Route::post('/products/create', 'ProductAdminController@save')->name('admin.products.save');
     Route::get('/products/{product}/edit', 'ProductAdminController@edit')->name('admin.products.edit');
     Route::put('/products/{product}/edit', 'ProductAdminController@save')->name('admin.products.update');
+    Route::post('/products/save-image', 'ProductAdminController@saveImage');
     Route::get('/products/{product}/delete', 'ProductAdminController@destroy')->name('admin.products.delete');
 });

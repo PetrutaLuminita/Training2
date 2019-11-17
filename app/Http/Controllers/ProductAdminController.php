@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ValidateProductRequest;
 use App\Product;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class ProductAdminController extends Controller
 {
+    public function getAllProducts()
+    {
+        $products = Product::all();
+
+        return $products;
+    }
+
     /**
      * Show all the products from the DB
      *
@@ -16,7 +25,7 @@ class ProductAdminController extends Controller
     {
         $products = Product::all();
 
-        return view('admin.index', ['products' => $products]);
+        return view('admin.index');
     }
 
     /**
@@ -34,15 +43,17 @@ class ProductAdminController extends Controller
     /**
      * Persist the new product or the edited one
      *
-     * @param ValidateProductRequest $request
-     * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     * @return string
      */
-    public function save(ValidateProductRequest $request, Product $product)
+    public function save(Request $request)
     {
-        $validData = $request->validated();
+        $product = new Product();
 
-        $product->fill($validData);
+        $product->title = $request->get('title');
+        $product->description = $request->get('description');
+        $product->price = $request->get('price');
+
         $product->save();
 
         if ($request->hasFile('image')) {
@@ -56,21 +67,38 @@ class ProductAdminController extends Controller
             }
         }
 
-        return redirect()->route('admin.products.index');
+//        return redirect()->route('admin.products.index');
+        return 'Product added successfully!';
     }
+
+    public function saveImage(Request $request) {
+        $product = Product::query()->where('title', $request->get('title'))->first();
+
+        $fileName = $request->file('image')->getClientOriginalExtension();
+
+        // save image in storage
+        if ($request->file('image')->storeAs('public/images', $fileName)) {
+            // save product image
+            $product->image_path = $fileName;
+            $product->save();
+        }
+        return 'Image added successfully!';
+
+    }
+
 
     /**
      * Delete the selected product
      *
      * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
     public function destroy(Product $product)
     {
         $product->delete();
-        
-        return redirect()->route('admin.products.index');
+
+        return 'Product deleted';
     }
 
 }

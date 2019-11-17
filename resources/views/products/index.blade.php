@@ -5,7 +5,7 @@
 @extends('layout')
 
 @section('title')
-    {{ __('Products') }}
+    <div class="title"></div>
 @endsection
 
 @section('scripts')

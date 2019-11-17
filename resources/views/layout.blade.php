@@ -28,7 +28,7 @@
             </div>
         <?php endif ?>
 
-        <div class="content">
+        <div class="contents text-center">
             <div class="title m-b-md">
                 @yield('title')
             </div>

@@ -8,10 +8,10 @@ $(function () {
             type: 'GET',
             url: '/add_to_cart/' + productId,
         })
-        .done(function () {
+        .done(function() {
             $('tr[productRow="' + productId + '"]').remove();
         })
-        .fail( function(error) {
+        .fail(function(error) {
             console.log(error);
         });
     }
@@ -21,10 +21,10 @@ $(function () {
             type:'GET',
             url:'/remove_from_cart/' + productId,
         })
-        .done(function () {
+        .done(function() {
             $('tr[productRow="' + productId + '"]').remove();
         })
-        .fail( function(error) {
+        .fail(function(error) {
             console.log(error);
         });
     }
@@ -35,7 +35,7 @@ $(function () {
             url:'/get_products',
             dataType: 'json'
         })
-        .done( function (products) {
+        .done(function(products) {
             show(products, 'index');
         });
     }
@@ -46,12 +46,20 @@ $(function () {
             url:'/cart',
             dataType: 'json'
         })
-        .done( function (products) {
+        .done(function(products) {
             show(products, 'cart');
         });
     }
 
     function show(products, page) {
+        let title = $('.title');
+        title.empty();
+
+        if (page === 'index') {
+            title.append('Products');
+        } else {
+            title.append('Cart');
+        }
         productsTable.empty();
 
         $('button[changePage="1"]').remove();
