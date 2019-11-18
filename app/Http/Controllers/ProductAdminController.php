@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class ProductAdminController extends Controller
@@ -53,28 +53,38 @@ class ProductAdminController extends Controller
      */
     public function save(Request $request, Product $product)
     {
-        if (!$product) {
-            $product = new Product();
-        }
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'description' => 'nullable',
+            'price' => 'required|numeric',
+            'image' => 'nullable',
+        ]);
 
-        $product->title = $request->get('title');
-        $product->description = $request->get('description');
-        $product->price = $request->get('price');
-
-        $product->save();
-
-        if ($request->hasFile('image')) {
-            $fileName = $product->getKey() . '.' . $request->file('image')->getClientOriginalExtension();
-
-            // save image in storage
-            if ($request->file('image')->storeAs('public/images', $fileName)) {
-                // save product image
-                $product->image_path = $fileName;
-                $product->save();
+        if ($validator->passes()) {
+            if (!$product) {
+                $product = new Product();
             }
-        }
 
-        return 'Product added successfully!';
+            $product->title = $request->get('title');
+            $product->description = $request->get('description');
+            $product->price = $request->get('price');
+
+            $product->save();
+
+            if ($request->hasFile('image')) {
+                $fileName = $product->getKey() . '.' . $request->file('image')->getClientOriginalExtension();
+
+                // save image in storage
+                if ($request->file('image')->storeAs('public/images', $fileName)) {
+                    // save product image
+                    $product->image_path = $fileName;
+                    $product->save();
+                }
+            }
+            return response()->json(['success'=>'Success!']);
+        } else {
+            return response()->json(['error'=>$validator->errors()->all()]);
+        }
     }
 
     /**

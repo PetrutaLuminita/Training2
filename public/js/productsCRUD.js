@@ -35,27 +35,21 @@ $(function () {
 
     function show(products, page) {
         let content = $('.content');
-
-        content.empty();
-        content.append('<table class="table all-products-table"></table>');
-
-        let productsTable = $('.all-products-table');
         let title = $('.admin-title');
-
-        title.empty();
+        let productsTable = $('<table class="table all-products-table"></table>');
 
         if (page === 'index') {
-            title.append('All products');
+            title.html('All products');
         }
 
-        productsTable.empty();
+        content.empty();
+        content.append(productsTable);
 
         if (products.length === 0) {
             productsTable.append('<div>There are no products</div>');
 
             return;
         }
-
 
         products.forEach(function (product) {
             if (product.image === '') {
@@ -64,7 +58,7 @@ $(function () {
 
             const prodId = product.id;
 
-            let tableRow = $('<tr productRow="' + prodId + '">').append(
+            let tableRow = $('<tr>').append(
                 '<td class="align-middle">' +
                     '<img src="' + product.image + '"' + ' alt="">' +
                 '</td>' +
@@ -82,7 +76,7 @@ $(function () {
             productsTable.append(tableRow);
         });
 
-        content.append('<button class="btn btn-primary mb-2 mr-2 productAddBtn">Add</button>');
+        content.append('<button class="btn btn-primary mb-2 mr-2 product-add-btn">Add</button>');
         content.append('<a href="/logout" class="btn btn-primary mb-2">Logout</a>');
 
         $('[productDeleteBtn]').click(function() {
@@ -95,7 +89,7 @@ $(function () {
             getProductForEdit(prodId);
         });
 
-        $('.productAddBtn').click(function() {
+        $('.product-add-btn').click(function() {
             editProductForm();
         });
     }
@@ -115,22 +109,16 @@ $(function () {
 
         let form = $('.form');
 
-        let btnName,  productTitle, productDesc, productPrice, productImg, productId;
+        let btnName = productTitle = productDesc = productPrice = productImg = productId = '';
 
         if (typeof product === "undefined") {
             title.empty();
-
-            title.append('Add product');
+            title.html('Add product');
 
             btnName = 'Add';
-            productTitle = '';
-            productDesc = '';
-            productPrice = '';
-            productImg = '';
-            productId = '';
         } else {
             title.empty();
-            title.append('Edit product');
+            title.html('Edit product');
 
             btnName = 'Update';
             productTitle = product.title;
@@ -141,7 +129,6 @@ $(function () {
 
             form.append('<input type="hidden" name="_method" value="PUT">');
         }
-
 
         form.append(
             '<input class="input form-control mb-2" type="text" placeholder="Title" name="title" value="' + productTitle + '">' +
@@ -188,10 +175,30 @@ $(function () {
                 }
             })
             .done(function(response) {
-                showProductsPage();
+                if (response.error) {
+                    console.log(response.error)
+                    response.error.forEach(function (error) {
+                        let msg = $('<div class="alert alert-danger print-error-msg d-none"></div>');
+
+                        if (error.indexOf('title') !== -1) {
+                            $('input[name="title"]').after(msg);
+                        }
+
+                        if (error.indexOf('price') !== -1) {
+                            $('input[name="price"]').after(msg);
+                        }
+                        msg.append(error);
+                        msg.append('<br>');
+                        msg.removeClass('d-none');
+                        msg.css('background', '#FCAE9D');
+                        msg.css('color', 'red');
+                    })
+                } else {
+                    showProductsPage();
+                }
             })
             .fail(function (response) {
-                console.log(response);
+               console.log(response);
             })
         });
 
