@@ -28,9 +28,9 @@ $(function () {
             type:'GET',
             url:'/products/' + productId,
         })
-            .done(function(product) {
-                editProductForm(product);
-            });
+        .done(function(product) {
+            editProductForm(product);
+        });
     }
 
     function show(products, page) {
@@ -82,7 +82,7 @@ $(function () {
             productsTable.append(tableRow);
         });
 
-        content.append('<button class="btn btn-primary mb-2 mr-2" productAddBtn>Add</button>');
+        content.append('<button class="btn btn-primary mb-2 mr-2 productAddBtn">Add</button>');
         content.append('<a href="/logout" class="btn btn-primary mb-2">Logout</a>');
 
         $('[productDeleteBtn]').click(function() {
@@ -95,11 +95,9 @@ $(function () {
             getProductForEdit(prodId);
         });
 
-        $('[productAddBtn]').click(function() {
-            addOrEditProductForm();
+        $('.productAddBtn').click(function() {
+            editProductForm();
         });
-
-
     }
 
     function editProductForm(product) {
@@ -111,32 +109,57 @@ $(function () {
 
         content.append(
             '<div class="container mt-3">' +
-                '<form method="POST" enctype="multipart/form-data"></form>' +
+                '<form method="POST" class="form" enctype="multipart/form-data"></form>' +
             '</div>'
         );
 
-        let form = $('form');
+        let form = $('.form');
 
-        title.append('Edit product');
-        form.append('<input type="hidden" name="_method" value="PUT">');
+        let btnName,  productTitle, productDesc, productPrice, productImg, productId;
+
+        if (typeof product === "undefined") {
+            title.empty();
+
+            title.append('Add product');
+
+            btnName = 'Add';
+            productTitle = '';
+            productDesc = '';
+            productPrice = '';
+            productImg = '';
+            productId = '';
+        } else {
+            title.empty();
+            title.append('Edit product');
+
+            btnName = 'Update';
+            productTitle = product.title;
+            productDesc = product.description;
+            productPrice = product.price;
+            productImg = product.image;
+            productId = product.id;
+
+            form.append('<input type="hidden" name="_method" value="PUT">');
+        }
+
 
         form.append(
-            '<input class="input form-control mb-2" type="text" placeholder="Title" name="title" value="' + product.title + '">' +
-            '<textarea class="textarea form-control mb-2" placeholder="Description" name="description">' + product.description + '</textarea>' +
-            '<input class="input form-control" type="text" placeholder="Price" name="price" value="' + product.price + '">' +
-            '<input class="input form control text-left mb-2 mt-2" type="file" name="image" value="' + product.image + '"><br>' +
-            '<button class="btn btn-primary" product="' + product.id + '">Update</button>'
+            '<input class="input form-control mb-2" type="text" placeholder="Title" name="title" value="' + productTitle + '">' +
+            '<textarea class="textarea form-control mb-2" placeholder="Description" name="description">' + productDesc + '</textarea>' +
+            '<input class="input form-control" type="text" placeholder="Price" name="price" value="' + productPrice + '">' +
+            '<input class="input form control text-left mb-2 mt-2" type="file" name="image" value="' + productImg + '"><br>' +
+            '<button class="btn btn-primary">' + btnName + '</button>'
         );
 
-        if (product.image !== '') {
-            $('<img src="'+ product.image + '">').insertBefore('button[product]');
+        if (productImg !== '') {
+            $('<img src="'+ productImg + '""><br><br>').insertBefore('button[product]');
         } else {
-            $('<div class="text-left">No image uploaded</div>').insertBefore('button[product]');
+            $('<div class="text-left">No image uploaded</div><br>').insertBefore('button[product]');
         }
 
         content.append(
             '<div class="text-left">' +
-            '<button class="btn btn-info ml-3" back>Go back</button>' +
+                '<button class="btn btn-info ml-3 back">Go back</button>' +
             '</div>'
         );
 
@@ -145,9 +168,16 @@ $(function () {
 
             let token = $('[name="_token"]').val();
             let formData = new FormData(this);
+            let url;
+
+            if (productId === '') {
+                url = '/products/create';
+            } else {
+                url = '/products/' + productId + '/edit';
+            }
 
             $.ajax({
-                url: '/products/' + product.id + '/edit',
+                url: url,
                 type: 'post',
                 data: formData,
                 dataType: 'json',
@@ -157,78 +187,16 @@ $(function () {
                     'X-CSRF-TOKEN': token
                 }
             })
-            .done(function() {
+            .done(function(response) {
                 showProductsPage();
             })
             .fail(function (response) {
-                alert(response);
+                console.log(response);
             })
         });
 
-        $('[back]').click(function() {
+        $('.back').click(function() {
             showProductsPage();
         });
     }
-
-    function addOrEditProductForm() {
-        let content = $('.content');
-        let title = $('.admin-title');
-
-        title.empty();
-        content.empty();
-
-        content.append(
-            '<div class="container mt-3">' +
-                '<form method="POST" enctype="multipart/form-data"></form>' +
-            '</div>'
-        );
-
-        let form = $('form');
-
-        title.append('Add product');
-
-        form.append(
-            '<input class="input form-control mb-2" type="text" placeholder="Title" name="title">' +
-            '<textarea class="textarea form-control mb-2" placeholder="Description" name="description"></textarea>' +
-            '<input class="input form-control" type="text" placeholder="Price" name="price">' +
-            '<input class="input form control text-left mb-2 mt-2" type="file" name="image"><br>' +
-            '<button class="btn btn-primary">Submit</button>'
-        );
-
-        content.append(
-            '<div class="text-left">' +
-                '<button class="btn btn-info ml-3" back>Go back</button>' +
-            '</div>'
-        );
-
-        $('form').submit(function(e) {
-            e.preventDefault();
-
-            let token = $('[name="_token"]').val();
-            let formData = new FormData(this);
-
-            $.ajax({
-                url: '/products/create',
-                type: 'post',
-                data: formData,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': token
-                }
-            })
-            .done(function() {
-                showProductsPage();
-            })
-            .fail(function (response) {
-                alert(response);
-            })
-        });
-
-        $('[back]').click(function() {
-            showProductsPage();
-        });
-    }
-
 });
