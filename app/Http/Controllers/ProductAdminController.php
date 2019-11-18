@@ -39,17 +39,23 @@ class ProductAdminController extends Controller
         return view('admin.edit', ['product' => $product]);
     }
 
+    public function getProductForEdit(Product $product) {
+        return $product;
+    }
+
 
     /**
      * Persist the new product or the edited one
      *
      * @param Request $request
+     * @param Product $product
      * @return string
      */
-    public function save(Request $request)
+    public function save(Request $request, Product $product)
     {
-//        dd($request->all());
-        $product = new Product();
+        if (!$product) {
+            $product = new Product();
+        }
 
         $product->title = $request->get('title');
         $product->description = $request->get('description');
@@ -68,25 +74,8 @@ class ProductAdminController extends Controller
             }
         }
 
-//        return redirect()->route('admin.products.index');
         return 'Product added successfully!';
     }
-
-//    public function saveImage(Request $request) {
-//        $product = Product::query()->where('title', $request->get('title'))->first();
-//
-//        $fileName = $product->getKey() . $request->file('image')->getClientOriginalExtension();
-//
-//        // save image in storage
-//        if ($request->file('image')->storeAs('public/images', $fileName)) {
-//            // save product image
-//            $product->image_path = $fileName;
-//            $product->save();
-//        }
-//        return 'Image added successfully!';
-//
-//    }
-
 
     /**
      * Delete the selected product

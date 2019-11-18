@@ -31,6 +31,6 @@ Route::middleware(['admin'])->group(function() {
     Route::post('/products/create', 'ProductAdminController@save')->name('admin.products.save');
     Route::get('/products/{product}/edit', 'ProductAdminController@edit')->name('admin.products.edit');
     Route::put('/products/{product}/edit', 'ProductAdminController@save')->name('admin.products.update');
-    Route::post('/products/save-image', 'ProductAdminController@saveImage');
+    Route::get('/products/{product}', 'ProductAdminController@getProductForEdit');
     Route::get('/products/{product}/delete', 'ProductAdminController@destroy')->name('admin.products.delete');
 });
