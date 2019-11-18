@@ -48,6 +48,7 @@ class ProductAdminController extends Controller
      */
     public function save(Request $request)
     {
+//        dd($request->all());
         $product = new Product();
 
         $product->title = $request->get('title');
@@ -71,20 +72,20 @@ class ProductAdminController extends Controller
         return 'Product added successfully!';
     }
 
-    public function saveImage(Request $request) {
-        $product = Product::query()->where('title', $request->get('title'))->first();
-
-        $fileName = $request->file('image')->getClientOriginalExtension();
-
-        // save image in storage
-        if ($request->file('image')->storeAs('public/images', $fileName)) {
-            // save product image
-            $product->image_path = $fileName;
-            $product->save();
-        }
-        return 'Image added successfully!';
-
-    }
+//    public function saveImage(Request $request) {
+//        $product = Product::query()->where('title', $request->get('title'))->first();
+//
+//        $fileName = $product->getKey() . $request->file('image')->getClientOriginalExtension();
+//
+//        // save image in storage
+//        if ($request->file('image')->storeAs('public/images', $fileName)) {
+//            // save product image
+//            $product->image_path = $fileName;
+//            $product->save();
+//        }
+//        return 'Image added successfully!';
+//
+//    }
 
 
     /**

@@ -23,16 +23,6 @@ $(function () {
         });
     }
 
-    // function editProductPage(productId) {
-    //     $.ajax({
-    //         type:'GET',
-    //         url:'/products/' + productId + '/edit'
-    //     })
-    //     .done(function(response) {
-    //         edit(productId);
-    //     });
-    // }
-
     function show(products, page) {
         let content = $('.content');
 
@@ -122,12 +112,15 @@ $(function () {
 
         content.append(
             '<div class="container mt-3">' +
+                '<form method="POST" enctype="multipart/form-data"></form>' +
             '</div>'
         );
 
+        let form = $('form');
+
         title.append('Add product');
 
-        content.append(
+        form.append(
             '<input class="input form-control mb-2" type="text" placeholder="Title" name="title">' +
             '<textarea class="textarea form-control mb-2" placeholder="Description" name="description"></textarea>' +
             '<input class="input form-control" type="text" placeholder="Price" name="price">' +
@@ -141,67 +134,29 @@ $(function () {
             '</div>'
         );
 
-        $('[add-product]').click(function() {
-            let title = $('[name="title"]').val();
-            let description = $('[name="description"]').val();
-            let price = $('[name="price"]').val();
+        $('form').submit(function(e) {
+            e.preventDefault();
+
             let token = $('[name="_token"]').val();
+            let formData = new FormData(this);
 
-            let formData = new FormData();
-            formData = {
-                'title': title,
-                'description': description,
-                'price': price
-            };
-
-            console.log(formData);
-
-            $.ajaxSetup({
+            $.ajax({
+                url: '/products/create',
+                type: 'post',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
                 headers: {
                     'X-CSRF-TOKEN': token
                 }
-            });
-
-            $.ajax({
-                type: 'post',
-                url: '/products/create',
-                dataType: 'json',
-                data: formData,
             })
-            .done(function (response) {
-                // showProductsPage();
+            .done(function(response) {
                 console.log(response);
             })
             .fail(function (response) {
                 console.log(response);
-            });
-
-            if ($('[name="image"]').prop('files')[0]) {
-                let image = $('[name="image"]').prop('files')[0];
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': token
-                    }
-                });
-
-                $.ajax({
-                    type: 'post',
-                    url: '/products/save-image',
-                    dataType: 'json',
-                    data: {'image': image, 'title': title},
-                    contentType:false,
-                    cache: false,
-                    processData: false
-                })
-                    .done(function (response) {
-                        showProductsPage();
-                        console.log(response);
-                    })
-                    .fail(function (response) {
-                        console.log(response);
-                    })
-            }
+            })
         });
 
         $('[back]').click(function() {
