@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class ProductAdminController extends Controller
 {
+    /**
+     * Get all products from the database (for the ajax part)
+     *
+     * @return Product[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function getAllProducts()
     {
         $products = Product::all();
@@ -39,10 +44,10 @@ class ProductAdminController extends Controller
         return view('admin.edit', ['product' => $product]);
     }
 
-    public function getProductForEdit(Product $product) {
+    public function getProductForEdit(Product $product)
+    {
         return $product;
     }
-
 
     /**
      * Persist the new product or the edited one

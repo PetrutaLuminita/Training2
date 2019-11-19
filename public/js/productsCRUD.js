@@ -9,7 +9,7 @@ $(function () {
             dataType: 'json'
         })
         .done(function(products) {
-            show(products, 'index');
+            show(products);
         });
     }
 
@@ -29,18 +29,16 @@ $(function () {
             url:'/products/' + productId,
         })
         .done(function(product) {
-            editProductForm(product);
+            addOrEditProductForm(product);
         });
     }
 
-    function show(products, page) {
+    function show(products) {
         let content = $('.content');
         let title = $('.admin-title');
         let productsTable = $('<table class="table all-products-table"></table>');
 
-        if (page === 'index') {
-            title.html('All products');
-        }
+        title.html('All products');
 
         content.empty();
         content.append(productsTable);
@@ -90,11 +88,11 @@ $(function () {
         });
 
         $('.product-add-btn').click(function() {
-            editProductForm();
+            addOrEditProductForm();
         });
     }
 
-    function editProductForm(product) {
+    function addOrEditProductForm(product) {
         let content = $('.content');
         let title = $('.admin-title');
 
@@ -135,13 +133,13 @@ $(function () {
             '<textarea class="textarea form-control mb-2" placeholder="Description" name="description">' + productDesc + '</textarea>' +
             '<input class="input form-control" type="text" placeholder="Price" name="price" value="' + productPrice + '">' +
             '<input class="input form control text-left mb-2 mt-2" type="file" name="image" value="' + productImg + '"><br>' +
-            '<button class="btn btn-primary">' + btnName + '</button>'
+            '<button class="btn btn-primary product">' + btnName + '</button>'
         );
 
         if (productImg !== '') {
-            $('<img src="'+ productImg + '""><br><br>').insertBefore('button[product]');
+            $('<img src="'+ productImg + '""><br><br>').insertBefore('.product');
         } else {
-            $('<div class="text-left">No image uploaded</div><br>').insertBefore('button[product]');
+            $('<div class="text-left">No image uploaded</div><br>').insertBefore('.product');
         }
 
         content.append(
@@ -176,7 +174,6 @@ $(function () {
             })
             .done(function(response) {
                 if (response.error) {
-                    console.log(response.error)
                     response.error.forEach(function (error) {
                         let msg = $('<div class="alert alert-danger print-error-msg d-none"></div>');
 
