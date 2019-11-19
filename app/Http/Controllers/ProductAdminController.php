@@ -44,6 +44,12 @@ class ProductAdminController extends Controller
         return view('admin.edit', ['product' => $product]);
     }
 
+    /**
+     * Get the details of the product in order to update
+     *
+     * @param Product $product
+     * @return Product
+     */
     public function getProductForEdit(Product $product)
     {
         return $product;

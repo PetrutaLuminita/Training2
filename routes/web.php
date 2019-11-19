@@ -15,8 +15,7 @@ Route::get('/login', 'LoginController@show')->name('show.login');
 Route::post('/login', 'LoginController@login')->name('login');
 Route::get('/logout', 'LoginController@logout')->name('logout');
 
-
-Route::get('/get_products', 'ProductController@getProducts');
+Route::get('/get_products', 'ProductController@getProducts')->name('products.get.products.ajax');
 Route::get('/', 'ProductController@index')->name('products.index');
 Route::get('/cart', 'ProductController@getCartProducts')->name('products.cart');
 Route::get('/cart_checkout', 'ProductController@cartForCheckout')->name('products.cart.checkout');
@@ -31,6 +30,6 @@ Route::middleware(['admin'])->group(function() {
     Route::post('/products/create', 'ProductAdminController@save')->name('admin.products.save');
     Route::get('/products/{product}/edit', 'ProductAdminController@edit')->name('admin.products.edit');
     Route::put('/products/{product}/edit', 'ProductAdminController@save')->name('admin.products.update');
-    Route::get('/products/{product}', 'ProductAdminController@getProductForEdit');
+    Route::get('/products/{product}', 'ProductAdminController@getProductForEdit')->name('admin.products.edit.ajax');
     Route::get('/products/{product}/delete', 'ProductAdminController@destroy')->name('admin.products.delete');
 });
