@@ -54,6 +54,11 @@ class ProductController extends Controller
         return $products;
     }
 
+    /**
+     * Show the cart page with the checkout form
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function cartForCheckout()
     {
         $products = new Collection();

@@ -2,6 +2,9 @@ $(function () {
 
     showProductsPage();
 
+    /**
+     * Get all the products from the database
+     */
     function showProductsPage() {
         $.ajax({
             type:'GET',
@@ -13,6 +16,11 @@ $(function () {
         });
     }
 
+    /**
+     * Delete the selected product
+     *
+     * @param productId
+     */
     function deleteProduct(productId) {
         $.ajax({
             type:'GET',
@@ -23,6 +31,11 @@ $(function () {
         });
     }
 
+    /**
+     * Get the details of the selected product from the DB
+     *
+     * @param productId
+     */
     function getProductForEdit(productId) {
         $.ajax({
             type:'GET',
@@ -33,6 +46,11 @@ $(function () {
         });
     }
 
+    /**
+     * Show the products listing
+     *
+     * @param products
+     */
     function show(products) {
         let content = $('.content');
         let title = $('.admin-title');
@@ -66,8 +84,8 @@ $(function () {
                     '<div class="font-italic">' + product.price + '</div>' +
                 '</td>' +
                 '<td class="text-center align-middle to-center">' +
-                    '<buttton class="btn btn-primary mr-2" productEditBtn="' + prodId + '">Edit</buttton>' +
-                    '<buttton class="btn btn-primary" productDeleteBtn="' + prodId + '">Delete</buttton>' +
+                    '<buttton class="btn btn-primary mr-2 mb-2 product-edit-btn" product="' + prodId + '">Edit</buttton>' +
+                    '<buttton class="btn btn-primary product-delete-btn" product="' + prodId + '">Delete</buttton>' +
                 '</td>'
             );
 
@@ -77,13 +95,13 @@ $(function () {
         content.append('<button class="btn btn-primary mb-2 mr-2 product-add-btn">Add</button>');
         content.append('<a href="/logout" class="btn btn-primary mb-2">Logout</a>');
 
-        $('[productDeleteBtn]').click(function() {
-            let prodId = $(this).attr('productDeleteBtn');
+        $('.product-delete-btn').click(function() {
+            let prodId = $(this).attr('product');
             deleteProduct(prodId);
         });
 
-        $('[productEditBtn]').click(function() {
-            let prodId = $(this).attr('productEditBtn');
+        $('.product-edit-btn').click(function() {
+            let prodId = $(this).attr('product');
             getProductForEdit(prodId);
         });
 
@@ -92,6 +110,11 @@ $(function () {
         });
     }
 
+    /**
+     * Show the add/edit form
+     *
+     * @param product
+     */
     function addOrEditProductForm(product) {
         let content = $('.content');
         let title = $('.admin-title');
@@ -133,13 +156,13 @@ $(function () {
             '<textarea class="textarea form-control mb-2" placeholder="Description" name="description">' + productDesc + '</textarea>' +
             '<input class="input form-control" type="text" placeholder="Price" name="price" value="' + productPrice + '">' +
             '<input class="input form control text-left mb-2 mt-2" type="file" name="image" value="' + productImg + '"><br>' +
-            '<button class="btn btn-primary product">' + btnName + '</button>'
+            '<button class="btn btn-primary product-btn">' + btnName + '</button>'
         );
 
         if (productImg !== '') {
-            $('<img src="'+ productImg + '""><br><br>').insertBefore('.product');
+            $('<img src="'+ productImg + '""><br><br>').insertBefore('.product-btn');
         } else {
-            $('<div class="text-left">No image uploaded</div><br>').insertBefore('.product');
+            $('<div class="text-left">No image uploaded</div><br>').insertBefore('.product-btn');
         }
 
         content.append(
@@ -175,7 +198,7 @@ $(function () {
             .done(function(response) {
                 if (response.error) {
                     response.error.forEach(function (error) {
-                        let msg = $('<div class="alert alert-danger print-error-msg d-none"></div>');
+                        let msg = $('<div class="alert alert-danger d-none"></div>');
 
                         if (error.indexOf('title') !== -1) {
                             $('input[name="title"]').after(msg);
@@ -185,7 +208,6 @@ $(function () {
                             $('input[name="price"]').after(msg);
                         }
                         msg.append(error);
-                        msg.append('<br>');
                         msg.removeClass('d-none');
                         msg.css('background', '#FCAE9D');
                         msg.css('color', 'red');
@@ -195,7 +217,6 @@ $(function () {
                 }
             })
             .fail(function (response) {
-               console.log(response);
             })
         });
 

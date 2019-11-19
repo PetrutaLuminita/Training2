@@ -3,32 +3,43 @@ $(function () {
 
     showProductsPage();
 
+    /**
+     * Store in the session the id of the product and remove the associated row from index page
+     *
+     * @param productId
+     */
     function addToCart(productId) {
         $.ajax({
             type: 'GET',
             url: '/add_to_cart/' + productId,
         })
         .done(function() {
-            $('tr[productRow="' + productId + '"]').remove();
+            $('.product-row[product="' + productId + '"]').remove();
         })
         .fail(function(error) {
-            console.log(error);
         });
     }
 
+    /**
+     * Removes the id of the product from the session and the associated row from cart page
+     *
+     * @param productId
+     */
     function removeFromCart(productId) {
         $.ajax({
             type:'GET',
             url:'/remove_from_cart/' + productId,
         })
         .done(function() {
-            $('tr[productRow="' + productId + '"]').remove();
+            $('.product-row[product="' + productId + '"]').remove();
         })
         .fail(function(error) {
-            console.log(error);
         });
     }
 
+    /**
+     * Get the products that are not in the session for the index page
+     */
     function showProductsPage() {
         $.ajax({
             type:'GET',
@@ -40,6 +51,9 @@ $(function () {
         });
     }
 
+    /**
+     * Get the products in the session for the cart page
+     */
     function showCartPage() {
         $.ajax({
             type:'GET',
@@ -51,18 +65,24 @@ $(function () {
         });
     }
 
+    /**
+     * Create the index and cart pages based on the parameters passed
+     *
+     * @param products
+     * @param page
+     */
     function show(products, page) {
         let title = $('.title');
         title.empty();
 
         if (page === 'index') {
-            title.append('Products');
+            title.html('Products');
         } else {
-            title.append('Cart');
+            title.html('Cart');
         }
         productsTable.empty();
 
-        $('button[changePage="1"]').remove();
+        $('.change-page').remove();
 
         setChangeBtn(page);
 
@@ -80,7 +100,7 @@ $(function () {
             const prodId = product.id;
             const btnName = page === 'index' ? 'Add to cart' : 'Remove from cart';
 
-            let tableRow = $('<tr productRow="' + prodId + '">').append(
+            let tableRow = $('<tr class="product-row" product="' + prodId + '">').append(
                 '<td class="align-middle">' +
                     '<img src="' + product.image + '"' + ' alt="">' +
                 '</td>' +
@@ -90,15 +110,15 @@ $(function () {
                     '<div class="font-italic">' + product.price + '</div>' +
                 '</td>' +
                 '<td class="text-center align-middle to-center">' +
-                    '<buttton class="btn btn-primary" productBtn="' + prodId + '">' + btnName + '</buttton>' +
+                    '<buttton class="btn btn-primary product-btn" product="' + prodId + '">' + btnName + '</buttton>' +
                 '</td>'
             );
 
             productsTable.append(tableRow);
         });
 
-        $('[productBtn]').click(function() {
-            let prodId = $(this).attr('productBtn');
+        $('.product-btn').click(function() {
+            let prodId = $(this).attr('product');
 
             if (page === 'index') {
                 addToCart(prodId);
@@ -108,12 +128,17 @@ $(function () {
         });
     }
 
+    /**
+     * Create the button to navigate between the two pages based on the parameter passed
+     *
+     * @param page
+     */
     function setChangeBtn(page) {
         const goToBtn = page === 'index' ? 'Go to cart' : 'Show products';
 
-        productsTable.after($('<button class="btn btn-primary" changePage="1">' + goToBtn + '</button>'));
+        productsTable.after($('<button class="btn btn-primary change-page">' + goToBtn + '</button>'));
 
-        $('button[changePage="1"]').click(function() {
+        $('.change-page').click(function() {
             if (page === 'index' ) {
                 showCartPage();
             } else {
