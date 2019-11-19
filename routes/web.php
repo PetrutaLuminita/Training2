@@ -24,7 +24,7 @@ Route::get('/remove_from_cart/{product}', 'ProductController@removeFromCart')->n
 Route::post('/cart_checkout', 'ProductController@checkout')->name('checkout');
 
 Route::middleware(['admin'])->group(function() {
-    Route::get('/get_all_products', 'ProductAdminController@getAllProducts');
+    Route::get('/get_all_products', 'ProductAdminController@getProducts');
     Route::get('/products', 'ProductAdminController@index')->name('admin.products.index');
     Route::get('/products/create', 'ProductAdminController@edit')->name('admin.products.create');
     Route::post('/products/create', 'ProductAdminController@save')->name('admin.products.save');

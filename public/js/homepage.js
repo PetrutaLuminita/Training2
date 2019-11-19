@@ -16,8 +16,6 @@ $(function () {
         .done(function() {
             $('.product-row[product="' + productId + '"]').remove();
         })
-        .fail(function(error) {
-        });
     }
 
     /**
@@ -33,8 +31,6 @@ $(function () {
         .done(function() {
             $('.product-row[product="' + productId + '"]').remove();
         })
-        .fail(function(error) {
-        });
     }
 
     /**

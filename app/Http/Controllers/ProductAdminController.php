@@ -14,7 +14,7 @@ class ProductAdminController extends Controller
      *
      * @return Product[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function getAllProducts()
+    public function getProducts()
     {
         $products = Product::all();
 
@@ -28,8 +28,6 @@ class ProductAdminController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
-
         return view('admin.index');
     }
 
@@ -41,11 +39,11 @@ class ProductAdminController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('admin.edit', ['product' => $product]);
+        return view('admin.edit');
     }
 
     /**
-     * Get the details of the product in order to update
+     * Get the details of the product in order to update (for the ajax part)
      *
      * @param Product $product
      * @return Product

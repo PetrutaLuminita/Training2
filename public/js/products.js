@@ -26,23 +26,8 @@ $(function () {
             type:'GET',
             url:'/products/' + productId + '/delete'
         })
-        .done(function(response) {
+        .done(function() {
             showProductsPage();
-        });
-    }
-
-    /**
-     * Get the details of the selected product from the DB
-     *
-     * @param productId
-     */
-    function getProductForEdit(productId) {
-        $.ajax({
-            type:'GET',
-            url:'/products/' + productId,
-        })
-        .done(function(product) {
-            addOrEditProductForm(product);
         });
     }
 
@@ -52,14 +37,12 @@ $(function () {
      * @param products
      */
     function show(products) {
-        let content = $('.content');
         let title = $('.admin-title');
-        let productsTable = $('<table class="table all-products-table"></table>');
+        let productsTable = $('.all-products-table');
 
         title.html('All products');
 
-        content.empty();
-        content.append(productsTable);
+        productsTable.empty();
 
         if (products.length === 0) {
             productsTable.append('<div>There are no products</div>');
@@ -92,9 +75,6 @@ $(function () {
             productsTable.append(tableRow);
         });
 
-        content.append('<button class="btn btn-primary mb-2 mr-2 product-add-btn">Add</button>');
-        content.append('<a href="/logout" class="btn btn-primary mb-2">Logout</a>');
-
         $('.product-delete-btn').click(function() {
             let prodId = $(this).attr('product');
             deleteProduct(prodId);
@@ -102,126 +82,13 @@ $(function () {
 
         $('.product-edit-btn').click(function() {
             let prodId = $(this).attr('product');
-            getProductForEdit(prodId);
+            // getProductForEdit(prodId);
+            window.location.href = '/products/' + prodId + '/edit/';
         });
 
         $('.product-add-btn').click(function() {
-            addOrEditProductForm();
+            window.location.href = '/products/create';
         });
     }
 
-    /**
-     * Show the add/edit form
-     *
-     * @param product
-     */
-    function addOrEditProductForm(product) {
-        let content = $('.content');
-        let title = $('.admin-title');
-
-        title.empty();
-        content.empty();
-
-        content.append(
-            '<div class="container mt-3">' +
-                '<form method="POST" class="form" enctype="multipart/form-data"></form>' +
-            '</div>'
-        );
-
-        let form = $('.form');
-
-        let btnName = productTitle = productDesc = productPrice = productImg = productId = '';
-
-        if (typeof product === "undefined") {
-            title.empty();
-            title.html('Add product');
-
-            btnName = 'Add';
-        } else {
-            title.empty();
-            title.html('Edit product');
-
-            btnName = 'Update';
-            productTitle = product.title;
-            productDesc = product.description;
-            productPrice = product.price;
-            productImg = product.image;
-            productId = product.id;
-
-            form.append('<input type="hidden" name="_method" value="PUT">');
-        }
-
-        form.append(
-            '<input class="input form-control mb-2" type="text" placeholder="Title" name="title" value="' + productTitle + '">' +
-            '<textarea class="textarea form-control mb-2" placeholder="Description" name="description">' + productDesc + '</textarea>' +
-            '<input class="input form-control" type="text" placeholder="Price" name="price" value="' + productPrice + '">' +
-            '<input class="input form control text-left mb-2 mt-2" type="file" name="image" value="' + productImg + '"><br>' +
-            '<button class="btn btn-primary product-btn">' + btnName + '</button>'
-        );
-
-        if (productImg !== '') {
-            $('<img src="'+ productImg + '""><br><br>').insertBefore('.product-btn');
-        } else {
-            $('<div class="text-left">No image uploaded</div><br>').insertBefore('.product-btn');
-        }
-
-        content.append(
-            '<div class="text-left">' +
-                '<button class="btn btn-info ml-3 back">Go back</button>' +
-            '</div>'
-        );
-
-        $('form').submit(function(e) {
-            e.preventDefault();
-
-            let token = $('[name="_token"]').val();
-            let formData = new FormData(this);
-            let url;
-
-            if (productId === '') {
-                url = '/products/create';
-            } else {
-                url = '/products/' + productId + '/edit';
-            }
-
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: formData,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': token
-                }
-            })
-            .done(function(response) {
-                if (response.error) {
-                    response.error.forEach(function (error) {
-                        let msg = $('<div class="alert alert-danger d-none"></div>');
-
-                        if (error.indexOf('title') !== -1) {
-                            $('input[name="title"]').after(msg);
-                        }
-
-                        if (error.indexOf('price') !== -1) {
-                            $('input[name="price"]').after(msg);
-                        }
-                        msg.append(error);
-                        msg.removeClass('d-none');
-                        msg.css('background', '#FCAE9D');
-                        msg.css('color', 'red');
-                    })
-                } else {
-                    showProductsPage();
-                }
-            })
-            .fail(function (response) {
-            })
-        });
-
-        $('.back').click(function() {
-            showProductsPage();
-        });
-    }
 });
