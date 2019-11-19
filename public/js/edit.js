@@ -3,12 +3,7 @@ $(function () {
     if (window.location.href.indexOf('create') !== -1) {
         addOrEditProductForm();
     } else {
-        let arr = window.location.href.split('/');
-        let productId = arr[4];
-
-        let match = window.location.href.match(/\/products\/(\d+)\/edit\//);
-
-        console.log(match);
+        let productId = window.location.href.match(/\/products\/(\d+)\/edit/)[1];
 
         getProductForEdit(productId);
     }
