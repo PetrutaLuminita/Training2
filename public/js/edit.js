@@ -1,11 +1,9 @@
 $(function () {
-
-    if (window.location.href.indexOf('create') !== -1) {
+    if (window.location.pathname.indexOf('create') !== -1) {
         addOrEditProductForm();
     } else {
-        let productId = window.location.href.match(/\/products\/(\d+)\/edit/)[1];
-
-        getProductForEdit(productId);
+        let productId = window.location.pathname.match(/\/products\/(\d+)\/edit/)[1];
+        getProduct(productId);
     }
 
     /**
@@ -13,14 +11,14 @@ $(function () {
      *
      * @param productId
      */
-    function getProductForEdit(productId) {
+    function getProduct(productId) {
         $.ajax({
             type:'GET',
             url:'/products/' + productId,
         })
-            .done(function(product) {
-                addOrEditProductForm(product);
-            });
+        .done(function(product) {
+            addOrEditProductForm(product);
+        });
     }
 
     /**
@@ -73,9 +71,9 @@ $(function () {
             let url;
 
             if (productId === '') {
-                url = '/products/create';
+                url = '/products';
             } else {
-                url = '/products/' + productId + '/edit';
+                url = '/products/' + productId;
             }
 
             $.ajax({
@@ -89,27 +87,27 @@ $(function () {
                     'X-CSRF-TOKEN': token
                 }
             })
-                .done(function(response) {
-                    if (response.error) {
-                        response.error.forEach(function (error) {
-                            let msg = $('<div class="alert alert-danger d-none"></div>');
+            .done(function(response) {
+                if (response.error) {
+                    response.error.forEach(function (error) {
+                        let msg = $('<div class="alert alert-danger d-none"></div>');
 
-                            if (error.indexOf('title') !== -1) {
-                                $('input[name="title"]').after(msg);
-                            }
+                        if (error.indexOf('title') !== -1) {
+                            $('input[name="title"]').after(msg);
+                        }
 
-                            if (error.indexOf('price') !== -1) {
-                                $('input[name="price"]').after(msg);
-                            }
-                            msg.append(error);
-                            msg.removeClass('d-none');
-                            msg.css('background', '#FCAE9D');
-                            msg.css('color', 'red');
-                        })
-                    } else {
-                        window.location.href = '/products';
-                    }
-                })
+                        if (error.indexOf('price') !== -1) {
+                            $('input[name="price"]').after(msg);
+                        }
+                        msg.append(error);
+                        msg.removeClass('d-none');
+                        msg.css('background', '#FCAE9D');
+                        msg.css('color', 'red');
+                    })
+                } else {
+                    window.location.href = '/products';
+                }
+            })
         });
 
         $('.back').click(function() {

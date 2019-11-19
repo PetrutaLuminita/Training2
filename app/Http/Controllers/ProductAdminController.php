@@ -4,27 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ProductAdminController extends Controller
 {
     /**
-     * Get all products from the database (for the ajax part)
-     *
-     * @return Product[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public function getProducts()
-    {
-        $products = Product::all();
-
-        return $products;
-    }
-
-    /**
      * Show all the products from the DB
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @return Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
     public function index()
     {
@@ -32,14 +22,73 @@ class ProductAdminController extends Controller
     }
 
     /**
+     * Display the form to create a new product
+     *
+     * @return Factory|View
+     */
+    public function create()
+    {
+        return $this->edit();
+    }
+
+    /**
+     * Persist the new product in the DB
+     *
+     * @param Request $request
+     * @param Product $product
+     * @return string
+     */
+    public function store(Request $request, Product $product)
+    {
+        return $this->save($request, $product);
+    }
+
+    /**
      * Display a form to add/edit a product
      *
      * @param Product $product
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @return Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function edit(Product $product)
+    public function edit(Product $product = null)
     {
-        return view('admin.edit');
+        return view('admin.edit', compact('product'));
+    }
+
+    /**
+     * Update the selected product
+     *
+     * @param Request $request
+     * @param Product $product
+     * @return string
+     */
+    public function update(Request $request, Product $product)
+    {
+        return $this->save($request, $product);
+    }
+
+    /**
+     * Delete the selected product
+     *
+     * @param Product $product
+     * @return string
+     * @throws Exception
+     */
+    public function destroy(Product $product)
+    {
+        $product->delete();
+
+        return 'Product deleted';
+    }
+
+
+    /**
+     * Get all products from the database (for the ajax part)
+     *
+     * @return Product[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getProducts()
+    {
+        return Product::all();
     }
 
     /**
@@ -48,7 +97,7 @@ class ProductAdminController extends Controller
      * @param Product $product
      * @return Product
      */
-    public function getProductForEdit(Product $product)
+    public function getProduct(Product $product)
     {
         return $product;
     }
@@ -95,19 +144,4 @@ class ProductAdminController extends Controller
             return response()->json(['error'=>$validator->errors()->all()]);
         }
     }
-
-    /**
-     * Delete the selected product
-     *
-     * @param Product $product
-     * @return string
-     * @throws Exception
-     */
-    public function destroy(Product $product)
-    {
-        $product->delete();
-
-        return 'Product deleted';
-    }
-
 }

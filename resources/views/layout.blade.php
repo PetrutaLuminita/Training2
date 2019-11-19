@@ -21,7 +21,7 @@
         <?php if (Route::has('login')) : ?>
             <div class="top-right links">
                 <?php if (session('admin')) : ?>
-                    <a href="{{ route('admin.products.index') }}">{{ __('All products') }}</a>
+                    <a href="{{ route('products.index') }}">{{ __('All products') }}</a>
                 <?php else : ?>
                     <a href="{{ route('login') }}">{{ __('Login') }}</a>
                 <?php endif ?>

@@ -13,11 +13,12 @@
 @endsection
 
 @section('content')
+    @csrf
     <div class="content">
         <table class="table all-products-table"></table>
     </div>
 
-    <button class="btn btn-primary mb-2 mr-2 product-add-btn">{{ __('Add') }}</button>
+    <a href="{{ route('products.create') }}" class="btn btn-primary mb-2 mr-2 product-add-btn">{{ __('Add') }}</a>
 
-    <a href="/logout" class="btn btn-primary mb-2">{{ __('Logout') }}</a>
+    <a href="{{ route('logout') }}" class="btn btn-primary mb-2">{{ __('Logout') }}</a>
 @endsection

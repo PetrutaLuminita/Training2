@@ -38,11 +38,4 @@ class Product extends Model
 
         return env('APP_URL') . '/storage/images/' . $this->image_path;
     }
-
-    public function setDescriptionAttribute($description)
-    {
-        if (is_null($description)) {
-            $this->attributes['description'] = '';
-        }
-    }
 }

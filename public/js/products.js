@@ -22,9 +22,14 @@ $(function () {
      * @param productId
      */
     function deleteProduct(productId) {
+        let token = $('[name="_token"]').val();
+
         $.ajax({
-            type:'GET',
-            url:'/products/' + productId + '/delete'
+            type:'DELETE',
+            data: {
+                "_token": token,
+            },
+            url:'/products/' + productId
         })
         .done(function() {
             showProductsPage();
@@ -63,11 +68,11 @@ $(function () {
                 '</td>' +
                 '<td class="align-middle">' +
                     '<h5 class="font-weight-bold mb-2">' + product.title + '</h5>' +
-                    '<div class="font-weight-normal mb-2">' + product.description + '</div>' +
+                    '<div class="font-weight-normal mb-2">' + (product.description || '') + '</div>' +
                     '<div class="font-italic">' + product.price + '</div>' +
                 '</td>' +
                 '<td class="text-center align-middle to-center">' +
-                    '<buttton class="btn btn-primary mr-2 mb-2 product-edit-btn" product="' + prodId + '">Edit</buttton>' +
+                    '<buttton class="btn btn-primary mr-2 product-edit-btn" product="' + prodId + '">Edit</buttton>' +
                     '<buttton class="btn btn-primary product-delete-btn" product="' + prodId + '">Delete</buttton>' +
                 '</td>'
             );
@@ -82,13 +87,7 @@ $(function () {
 
         $('.product-edit-btn').click(function() {
             let prodId = $(this).attr('product');
-            // getProductForEdit(prodId);
             window.location.href = '/products/' + prodId + '/edit/';
         });
-
-        $('.product-add-btn').click(function() {
-            window.location.href = '/products/create';
-        });
     }
-
 });

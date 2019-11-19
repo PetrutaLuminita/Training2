@@ -28,7 +28,7 @@ class LoginController extends Controller
         if ($request->get('email') === 'admin' && $request->get('password') === 'admin') {
             session()->push('admin', true);
 
-            return redirect()->route('admin.products.index');
+            return redirect()->route('products.index');
         }
 
         return back()

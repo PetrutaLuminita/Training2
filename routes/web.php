@@ -24,12 +24,7 @@ Route::get('/remove_from_cart/{product}', 'ProductController@removeFromCart')->n
 Route::post('/cart_checkout', 'ProductController@checkout')->name('checkout');
 
 Route::middleware(['admin'])->group(function() {
+    Route::resource('products' ,'ProductAdminController')->except(['show']);
     Route::get('/get_all_products', 'ProductAdminController@getProducts');
-    Route::get('/products', 'ProductAdminController@index')->name('admin.products.index');
-    Route::get('/products/create', 'ProductAdminController@edit')->name('admin.products.create');
-    Route::post('/products/create', 'ProductAdminController@save')->name('admin.products.save');
-    Route::get('/products/{product}/edit', 'ProductAdminController@edit')->name('admin.products.edit');
-    Route::put('/products/{product}/edit', 'ProductAdminController@save')->name('admin.products.update');
-    Route::get('/products/{product}', 'ProductAdminController@getProductForEdit')->name('admin.products.edit.ajax');
-    Route::get('/products/{product}/delete', 'ProductAdminController@destroy')->name('admin.products.delete');
+    Route::get('/products/{product}', 'ProductAdminController@getProduct')->name('admin.products.edit.ajax');
 });
