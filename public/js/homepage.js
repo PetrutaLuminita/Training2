@@ -53,7 +53,7 @@ $(function () {
     function showCartPage() {
         $.ajax({
             type:'GET',
-            url:'/cart',
+            url:'/get_cart',
             dataType: 'json'
         })
         .done(function(products) {

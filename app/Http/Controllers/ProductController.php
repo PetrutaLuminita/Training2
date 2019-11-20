@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CheckoutRequest;
 use App\Mail\Order;
 use App\Product;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -29,21 +30,11 @@ class ProductController extends Controller
     }
 
     /**
-     * Show products that are not in the cart
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function index()
-    {
-        return view('products.index');
-    }
-
-    /**
      * Show products added to cart
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getCartProducts()
+    public function getCart()
     {
         $products = new Collection();
 
@@ -55,11 +46,21 @@ class ProductController extends Controller
     }
 
     /**
+     * Show products that are not in the cart
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        return view('products.index');
+    }
+
+    /**
      * Show the cart page with the checkout form
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function cartForCheckout()
+    public function cart()
     {
         $products = new Collection();
 
@@ -67,7 +68,7 @@ class ProductController extends Controller
             $products = Product::query()->whereIn('id', $productIds)->get();
         }
 
-        return view('products.cart', ['products' => $products]);
+        return view('products.cart');
     }
 
     /**
@@ -108,24 +109,37 @@ class ProductController extends Controller
     /**
      * Check if the input for the email is correct and send the email
      *
-     * @param CheckoutRequest $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function checkout(CheckoutRequest $request)
+    public function checkout(Request $request)
     {
-        $validData = $request->validated();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email',
+            'comments' => 'nullable'
+        ]);
 
         $products = Product::query()->whereIn('id', session('cart'))->get();
 
-        Mail::to(config('app.manager_email'))->send(new Order(
-            $products,
-            $validData['name'],
-            $validData['email'],
-            $validData['comments']
-        ));
+        if ($validator->passes()) {
 
-        session()->forget('cart');
+            if ($products->isEmpty()) {
+                $validator->errors()->add('cart', 'No products in cart');
+            } else {
+                Mail::to(config('app.manager_email'))->send(new Order(
+                    $products,
+                    $request->get('name'),
+                    $request->get('email'),
+                    $request->get('comments')
+                ));
 
-        return redirect()->route('products.index');
+                session()->forget('cart');
+
+                return response()->json(['success' => 'Success!']);
+            }
+        }
+
+        return response()->json(['error' => $validator->errors()->all()]);
     }
 }

@@ -1,8 +1,8 @@
 $(function () {
-    let productId = $('.edit-product-form').children('.form.with-token').attr('product');
+    let prodId = $('.edit-product-form').children('.form.with-token').attr('product');
 
-    if (productId !== '') {
-        getProduct(productId);
+    if (prodId !== '') {
+        getProduct(prodId);
     } else {
         addOrEditProductForm();
     }
@@ -32,13 +32,13 @@ $(function () {
 
         let btnName = productTitle = productDesc = productPrice = productImg = productId = '';
 
+        title.empty();
+
         if (typeof product === "undefined") {
-            title.empty();
             title.html('Add product');
 
             btnName = 'Add';
         } else {
-            title.empty();
             title.html('Edit product');
 
             btnName = 'Update';
@@ -66,7 +66,7 @@ $(function () {
         form.submit(function(e) {
             e.preventDefault();
 
-            let token = $('.edit-product-form').children('[name="_token"]').val();
+            let token = form.children('[name="_token"]').val();;
             let formData = new FormData(this);
             let url;
 
@@ -99,6 +99,7 @@ $(function () {
                         if (error.indexOf('price') !== -1) {
                             form.children('input[name="price"]').after(msg);
                         }
+
                         msg.append(error);
                         msg.removeClass('d-none');
                     })
@@ -112,5 +113,4 @@ $(function () {
             window.location.href = '/products';
         });
     }
-
 });

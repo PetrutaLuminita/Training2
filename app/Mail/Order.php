@@ -33,7 +33,7 @@ class Order extends Mailable
     {
 
         return $this->subject('Order')
-                    ->markdown('send_email')
+                    ->markdown('products.send_email')
                     ->with([
                         'customer' => $this->customer,
                         'email' => $this->email,

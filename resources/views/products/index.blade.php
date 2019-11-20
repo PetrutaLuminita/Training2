@@ -15,5 +15,5 @@
 @section('content')
     <table class="table products-table"></table>
 
-    <a href="{{ route('products.cart.checkout') }}" target="_blank" class="btn btn-primary ml-1">{{ __('Go to checkout') }}</a>
+    <a href="{{ route('product.cart') }}" class="btn btn-primary ml-1">{{ __('Go to checkout') }}</a>
 @endsection

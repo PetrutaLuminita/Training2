@@ -22,7 +22,6 @@
             <input class="input form-control prod-price" type="text" placeholder="{{ __('Price') }}" name="price">
             <input class="input form control text-left mb-2 prod-image" type="file" name="image"><br>
             <button class="btn btn-primary product-btn" type="submit"></button>
-
         </form>
 
         <div class="text-left">
