@@ -24,7 +24,7 @@ class ProductAdminController extends Controller
     /**
      * Display the form to create a new product
      *
-     * @return Factory|View
+     * @return Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
     public function create()
     {

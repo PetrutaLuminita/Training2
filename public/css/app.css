@@ -49,3 +49,7 @@ td.to-center {
   padding-left: 155px;
 }
 
+.alert-danger {
+    background: #FCAE9D;
+    color: red;
+}

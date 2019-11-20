@@ -22,12 +22,12 @@ $(function () {
      * @param productId
      */
     function deleteProduct(productId) {
-        let token = $('[name="_token"]').val();
+        let token = $('.products-listing').children('[name="_token"]').val();
 
         $.ajax({
             type:'DELETE',
             data: {
-                "_token": token,
+                _token: token
             },
             url:'/products/' + productId
         })
@@ -43,7 +43,8 @@ $(function () {
      */
     function show(products) {
         let title = $('.admin-title');
-        let productsTable = $('.all-products-table');
+        let content = $('.products-listing');
+        let productsTable = content.children('.all-products-table');
 
         title.html('All products');
 

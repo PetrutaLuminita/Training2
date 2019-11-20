@@ -68,7 +68,7 @@ $(function () {
      * @param page
      */
     function show(products, page) {
-        let title = $('.title');
+        let title = $('.index-title');
         title.empty();
 
         if (page === 'index') {

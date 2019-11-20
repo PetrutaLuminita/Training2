@@ -5,7 +5,7 @@
 @extends('layout')
 
 @section('title')
-    <div class="title"></div>
+    <div class="title index-title"></div>
 @endsection
 
 @section('scripts')
