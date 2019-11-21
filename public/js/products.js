@@ -83,7 +83,7 @@ $(function () {
         });
 
         $('.products-listing .all-products-table .product-delete-btn').click(function() {
-            let prodId = $(this).attr('product');
+            const prodId = $(this).attr('product');
             deleteProduct(prodId);
         });
 
