@@ -26,7 +26,11 @@ $(function () {
             url:'/remove_from_cart/' + productId,
         })
         .done(function() {
-            $('.product-row[product="' + productId + '"]').remove();
+            $('.products-in-cart .products-in-cart-table .product-row[product="' + productId + '"]').remove();
+
+            if ($('.products-in-cart .products-in-cart-table .product-row[product]').length === 0) {
+                $('.checkout').remove();
+            }
         })
     }
 
@@ -36,9 +40,7 @@ $(function () {
      * @param products
      */
     function show(products) {
-
-        let content = $('.products-in-cart');
-        let productsTable = content.children('.products-in-cart-table');
+        let productsTable = $('.products-in-cart .products-in-cart-table');
 
         productsTable.empty();
 
@@ -71,23 +73,17 @@ $(function () {
             productsTable.append(tableRow);
         });
 
-        $('.product-remove-btn').click(function() {
+        $('.products-in-cart .products-in-cart-table .product-remove-btn').click(function() {
             let prodId = $(this).attr('product');
             removeFromCart(prodId);
         });
 
-        let checkout = $('.checkout');
+        $('.checkout').removeClass('d-none');
 
-        checkout.removeClass('d-none');
-
-        let form = checkout.children('.checkout-form');
-
-        form.submit(function(e) {
+        $('.checkout .checkout-form').submit(function(e) {
             e.preventDefault();
 
-            let token = form.children('[name="_token"]').val();
-            let formData = new FormData(this);
-            console.log(token);
+            let token = $('.checkout .checkout-form [name="_token"]').val();
 
             $.ajax({
                 url: '/cart_checkout',
@@ -106,15 +102,11 @@ $(function () {
                         let msg = $('<div class="alert alert-danger d-none"></div>');
 
                         if (error.indexOf('name') !== -1) {
-                            form.children('input[name="name"]').after(msg);
+                            $('.checkout .checkout-form input[name="name"]').after(msg);
                         }
 
                         if (error.indexOf('email') !== -1) {
-                            form.children('input[name="email"]').after(msg);
-                        }
-
-                        if (error.indexOf('cart') !== -1) {
-                            form.children('input[name="comments"]').after(msg);
+                            $('.checkout .checkout-form input[name="email"]').after(msg);
                         }
 
                         msg.append(error);

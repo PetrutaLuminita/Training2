@@ -123,21 +123,16 @@ class ProductController extends Controller
         $products = Product::query()->whereIn('id', session('cart'))->get();
 
         if ($validator->passes()) {
+            Mail::to(config('app.manager_email'))->send(new Order(
+                $products,
+                $request->get('name'),
+                $request->get('email'),
+                $request->get('comments')
+            ));
 
-            if ($products->isEmpty()) {
-                $validator->errors()->add('cart', 'No products in cart');
-            } else {
-                Mail::to(config('app.manager_email'))->send(new Order(
-                    $products,
-                    $request->get('name'),
-                    $request->get('email'),
-                    $request->get('comments')
-                ));
+            session()->forget('cart');
 
-                session()->forget('cart');
-
-                return response()->json(['success' => 'Success!']);
-            }
+            return response()->json(['success' => 'Success!']);
         }
 
         return response()->json(['error' => $validator->errors()->all()]);

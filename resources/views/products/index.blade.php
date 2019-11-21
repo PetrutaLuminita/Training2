@@ -13,7 +13,8 @@
 @endsection
 
 @section('content')
-    <table class="table products-table"></table>
-
-    <a href="{{ route('product.cart') }}" class="btn btn-primary ml-1">{{ __('Go to checkout') }}</a>
+    <div class="products-list-table">
+        <table class="table products-table"></table>
+        <a href="{{ route('product.cart') }}" class="btn btn-primary ml-1">{{ __('Go to checkout') }}</a>
+    </div>
 @endsection

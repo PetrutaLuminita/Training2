@@ -1,5 +1,5 @@
 $(function () {
-    let prodId = $('.edit-product-form').children('.form.with-token').attr('product');
+    let prodId = $('.edit-product-form .form.with-token').attr('product');
 
     if (prodId !== '') {
         getProduct(prodId);
@@ -28,7 +28,7 @@ $(function () {
      */
     function addOrEditProductForm(product) {
         let title = $('.admin-title-edit');
-        let form = $('.edit-product-form').children('.form');
+        let form = $('.edit-product-form .form');
 
         let btnName = productTitle = productDesc = productPrice = productImg = productId = '';
 
@@ -51,22 +51,22 @@ $(function () {
             form.append('<input type="hidden" name="_method" value="PUT">');
         }
 
-        $('.prod-title').val(productTitle);
-        $('.prod-description').val(productDesc);
-        $('.prod-price').val(productPrice);
-        $('.prod-image').attr('value', productImg);
-        $('.product-btn').html(btnName);
+        $('.edit-product-form .form .prod-title').val(productTitle);
+        $('.edit-product-form .form .prod-description').val(productDesc);
+        $('.edit-product-form .form .prod-price').val(productPrice);
+        $('.edit-product-form .form .prod-image').attr('value', productImg);
+        $('.edit-product-form .form .product-btn').html(btnName);
 
         if (productImg !== '') {
-            $('<img src="'+ productImg + '""><br><br>').insertBefore('.product-btn');
+            $('<img src="'+ productImg + '""><br><br>').insertBefore('.edit-product-form .form .product-btn');
         } else {
-            $('<div class="text-left">No image uploaded</div><br>').insertBefore('.product-btn');
+            $('<div class="text-left">No image uploaded</div><br>').insertBefore('.edit-product-form .form .product-btn');
         }
 
         form.submit(function(e) {
             e.preventDefault();
 
-            let token = form.children('[name="_token"]').val();;
+            let token = $('.edit-product-form .form [name="_token"]').val();;
             let formData = new FormData(this);
             let url;
 
@@ -93,11 +93,11 @@ $(function () {
                         let msg = $('<div class="alert alert-danger d-none"></div>');
 
                         if (error.indexOf('title') !== -1) {
-                            form.children('input[name="title"]').after(msg);
+                            form.children('.edit-product-form .form input[name="title"]').after(msg);
                         }
 
                         if (error.indexOf('price') !== -1) {
-                            form.children('input[name="price"]').after(msg);
+                            form.children('.edit-product-form .form input[name="price"]').after(msg);
                         }
 
                         msg.append(error);

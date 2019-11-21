@@ -22,7 +22,7 @@ $(function () {
      * @param productId
      */
     function deleteProduct(productId) {
-        let token = $('.products-listing').children('[name="_token"]').val();
+        let token = $('.products-listing .all-products-table [name="_token"]').val();
 
         $.ajax({
             type:'DELETE',
@@ -43,8 +43,7 @@ $(function () {
      */
     function show(products) {
         let title = $('.admin-title');
-        let content = $('.products-listing');
-        let productsTable = content.children('.all-products-table');
+        let productsTable = $('.products-listing .all-products-table');
 
         title.html('All products');
 
@@ -81,12 +80,12 @@ $(function () {
             productsTable.append(tableRow);
         });
 
-        $('.product-delete-btn').click(function() {
+        $('.products-listing .all-products-table .product-delete-btn').click(function() {
             let prodId = $(this).attr('product');
             deleteProduct(prodId);
         });
 
-        $('.product-edit-btn').click(function() {
+        $('.products-listing .all-products-table .product-edit-btn').click(function() {
             let prodId = $(this).attr('product');
             window.location.href = '/products/' + prodId + '/edit/';
         });

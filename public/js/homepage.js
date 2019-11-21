@@ -1,5 +1,5 @@
 $(function () {
-    let productsTable = $('.products-table');
+    let productsTable = $('.products-list-table .products-table');
 
     showProductsPage();
 
@@ -14,7 +14,7 @@ $(function () {
             url: '/add_to_cart/' + productId,
         })
         .done(function() {
-            $('.product-row[product="' + productId + '"]').remove();
+            $('.products-list-table .products-table .product-row[product="' + productId + '"]').remove();
         })
     }
 
@@ -29,7 +29,7 @@ $(function () {
             url:'/remove_from_cart/' + productId,
         })
         .done(function() {
-            $('.product-row[product="' + productId + '"]').remove();
+            $('.products-list-table .products-table .product-row[product="' + productId + '"]').remove();
         })
     }
 
@@ -78,7 +78,7 @@ $(function () {
         }
         productsTable.empty();
 
-        $('.change-page').remove();
+        $('.products-list-table .change-page').remove();
 
         setChangeBtn(page);
 
@@ -113,7 +113,7 @@ $(function () {
             productsTable.append(tableRow);
         });
 
-        $('.product-btn').click(function() {
+        $('.products-table .product-btn').click(function() {
             let prodId = $(this).attr('product');
 
             if (page === 'index') {
@@ -134,7 +134,7 @@ $(function () {
 
         productsTable.after($('<button class="btn btn-primary change-page">' + goToBtn + '</button>'));
 
-        $('.change-page').click(function() {
+        $('.products-table .change-page').click(function() {
             if (page === 'index' ) {
                 showCartPage();
             } else {
