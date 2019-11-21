@@ -40,14 +40,16 @@ $(function () {
      * @param products
      */
     function show(products) {
-        let productsTable = $('.products-in-cart .products-in-cart-table');
-
-        productsTable.empty();
 
         if (products.length === 0) {
-            productsTable.append('<div>There are no products</div>');
+            $('.products-in-cart').append('<div>There are no products</div>');
+
             return;
         }
+
+        $('.products-in-cart').append($('<table class="table products-in-cart-table"></table>'));
+
+        $('.products-in-cart .products-in-cart-table').empty();
 
         products.forEach(function (product) {
             if (product.image === '') {
@@ -70,7 +72,7 @@ $(function () {
                 '</td>'
             );
 
-            productsTable.append(tableRow);
+            $('.products-in-cart .products-in-cart-table').append(tableRow);
         });
 
         $('.products-in-cart .products-in-cart-table .product-remove-btn').click(function() {
@@ -83,6 +85,7 @@ $(function () {
         $('.checkout .checkout-form').submit(function(e) {
             e.preventDefault();
 
+            let formData = new FormData(this);
             let token = $('.checkout .checkout-form [name="_token"]').val();
 
             $.ajax({

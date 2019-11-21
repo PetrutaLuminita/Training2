@@ -1,6 +1,4 @@
 $(function () {
-    let productsTable = $('.products-list-table .products-table');
-
     showProductsPage();
 
     /**
@@ -69,24 +67,30 @@ $(function () {
      */
     function show(products, page) {
         let title = $('.index-title');
+        let content = $('.products-list-table');
+
         title.empty();
+        content.empty();
 
         if (page === 'index') {
             title.html('Products');
         } else {
             title.html('Cart');
         }
-        productsTable.empty();
 
-        $('.products-list-table .change-page').remove();
+        $('.index-cart-btn').remove();
 
         setChangeBtn(page);
 
         if (products.length === 0) {
-            productsTable.append('<div>There are no products</div>');
+            content.append('<div>There are no products</div>');
 
             return;
         }
+
+        $('.products-list-table .products-table').remove();
+
+        content.append($('<table class="table products-table"></table>'));
 
         products.forEach(function (product) {
             if (product.image === '') {
@@ -110,7 +114,7 @@ $(function () {
                 '</td>'
             );
 
-            productsTable.append(tableRow);
+            $('.products-list-table .products-table').append(tableRow);
         });
 
         $('.products-table .product-btn').click(function() {
@@ -132,9 +136,9 @@ $(function () {
     function setChangeBtn(page) {
         const goToBtn = page === 'index' ? 'Go to cart' : 'Show products';
 
-        productsTable.after($('<button class="btn btn-primary change-page">' + goToBtn + '</button>'));
+        $('.products-list-table').after($('<button class="btn btn-primary index-cart-btn">' + goToBtn + '</button>'));
 
-        $('.products-table .change-page').click(function() {
+        $('.index-cart-btn').click(function() {
             if (page === 'index' ) {
                 showCartPage();
             } else {

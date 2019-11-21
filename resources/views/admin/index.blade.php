@@ -14,12 +14,8 @@
 
 @section('content')
 
-    <div class="content products-listing">
-        <table class="table all-products-table"></table>
-        @csrf
-    </div>
+    <div class="content products-listing">@csrf</div>
 
     <a href="{{ route('products.create') }}" class="btn btn-primary mb-2 mr-2 product-add-btn">{{ __('Add') }}</a>
-
     <a href="{{ route('logout') }}" class="btn btn-primary mb-2">{{ __('Logout') }}</a>
 @endsection

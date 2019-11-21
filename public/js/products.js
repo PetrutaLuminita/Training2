@@ -22,7 +22,7 @@ $(function () {
      * @param productId
      */
     function deleteProduct(productId) {
-        let token = $('.products-listing .all-products-table [name="_token"]').val();
+        let token = $('.products-listing [name="_token"]').val();
 
         $.ajax({
             type:'DELETE',
@@ -43,17 +43,19 @@ $(function () {
      */
     function show(products) {
         let title = $('.admin-title');
-        let productsTable = $('.products-listing .all-products-table');
+        let content = $('.products-listing');
 
         title.html('All products');
 
-        productsTable.empty();
-
         if (products.length === 0) {
-            productsTable.append('<div>There are no products</div>');
+            content.append('<div>There are no products</div>');
 
             return;
         }
+
+        $('.products-listing .all-products-table').remove();
+
+        content.append($('<table class="table all-products-table"></table>'));
 
         products.forEach(function (product) {
             if (product.image === '') {
@@ -77,7 +79,7 @@ $(function () {
                 '</td>'
             );
 
-            productsTable.append(tableRow);
+            $('.products-listing .all-products-table').append(tableRow);
         });
 
         $('.products-listing .all-products-table .product-delete-btn').click(function() {
