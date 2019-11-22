@@ -1,5 +1,6 @@
 $(function () {
-    let prodId = $('.edit-product-form .form.with-token').attr('product');
+    var productForm = $('.edit-product-form .form');
+    var prodId = productForm.find('.with-token').attr('product');
 
     if (prodId !== '') {
         getProduct(prodId);
@@ -27,10 +28,8 @@ $(function () {
      * @param product
      */
     function addOrEditProductForm(product) {
-        let title = $('.admin-title-edit');
-        let form = $('.edit-product-form .form');
-
-        let btnName = productTitle = productDesc = productPrice = productImg = productId = '';
+        var title = $('.admin-title-edit');
+        var btnName = productTitle = productDesc = productPrice = productImg = productId = '';
 
         title.empty();
 
@@ -48,27 +47,31 @@ $(function () {
             productImg = product.image;
             productId = product.id;
 
-            form.append('<input type="hidden" name="_method" value="PUT">');
+            productForm.append('<input type="hidden" name="_method" value="PUT">');
         }
 
-        $('.edit-product-form .form .prod-title').val(productTitle);
-        $('.edit-product-form .form .prod-description').val(productDesc);
-        $('.edit-product-form .form .prod-price').val(productPrice);
-        $('.edit-product-form .form .prod-image').attr('value', productImg);
-        $('.edit-product-form .form .product-btn').html(btnName);
+        productForm.find('.prod-title').val(productTitle);
+        productForm.find('.prod-description').val(productDesc);
+        productForm.find('.prod-price').val(productPrice);
+        productForm.find('.prod-image').attr('value', productImg);
+        productForm.find('.product-btn').html(btnName);
+
+        var showImage;
 
         if (productImg !== '') {
-            $('<img src="'+ productImg + '""><br><br>').insertBefore('.edit-product-form .form .product-btn');
+            showImage = $('<img src="'+ productImg + '""><br><br>');
         } else {
-            $('<div class="text-left">No image uploaded</div><br>').insertBefore('.edit-product-form .form .product-btn');
+            showImage = $('<div class="text-left">No image uploaded</div><br>');
         }
 
-        form.submit(function(e) {
+        showImage.insertBefore(productForm.find('.product-btn'));
+
+        productForm.submit(function(e) {
             e.preventDefault();
 
-            let token = $('.edit-product-form .form [name="_token"]').val();;
-            let formData = new FormData(this);
-            let url;
+            var token = productForm.find('[name="_token"]').val();;
+            var formData = new FormData(this);
+            var url;
 
             if (productId === '') {
                 url = '/products';
@@ -90,14 +93,14 @@ $(function () {
             .done(function(response) {
                 if (response.error) {
                     response.error.forEach(function (error) {
-                        let msg = $('<div class="alert alert-danger d-none"></div>');
+                        var msg = $('<div class="alert alert-danger d-none"></div>');
 
                         if (error.indexOf('title') !== -1) {
-                            form.children('.edit-product-form .form input[name="title"]').after(msg);
+                            productForm.find('input[name="title"]').after(msg);
                         }
 
                         if (error.indexOf('price') !== -1) {
-                            form.children('.edit-product-form .form input[name="price"]').after(msg);
+                            productForm.find('input[name="price"]').after(msg);
                         }
 
                         msg.append(error);

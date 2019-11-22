@@ -62,12 +62,6 @@ class ProductController extends Controller
      */
     public function cart()
     {
-        $products = new Collection();
-
-        if ($productIds = session()->get('cart')) {
-            $products = Product::query()->whereIn('id', $productIds)->get();
-        }
-
         return view('products.cart');
     }
 

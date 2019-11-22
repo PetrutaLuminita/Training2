@@ -1,5 +1,4 @@
 $(function () {
-
     showProductsPage();
 
     /**
@@ -22,7 +21,7 @@ $(function () {
      * @param productId
      */
     function deleteProduct(productId) {
-        let token = $('.products-listing [name="_token"]').val();
+        var token = $('.products-listing [name="_token"]').val();
 
         $.ajax({
             type:'DELETE',
@@ -42,8 +41,8 @@ $(function () {
      * @param products
      */
     function show(products) {
-        let title = $('.admin-title');
-        let content = $('.products-listing');
+        var title = $('.admin-title');
+        var content = $('.products-listing');
 
         title.html('All products');
 
@@ -53,42 +52,44 @@ $(function () {
             return;
         }
 
-        $('.products-listing .all-products-table').remove();
-
+        content.find('.all-products-table').remove();
         content.append($('<table class="table all-products-table"></table>'));
+
+        var productsTable = content.find('.all-products-table');
+        var html;
 
         products.forEach(function (product) {
             if (product.image === '') {
                 product.image = '/img/missing-image.png';
             }
 
-            const prodId = product.id;
+            var prodId = product.id;
 
-            let tableRow = $('<tr>').append(
-                '<td class="align-middle">' +
-                    '<img src="' + product.image + '"' + ' alt="">' +
-                '</td>' +
-                '<td class="align-middle">' +
-                    '<h5 class="font-weight-bold mb-2">' + product.title + '</h5>' +
-                    '<div class="font-weight-normal mb-2">' + (product.description || '') + '</div>' +
-                    '<div class="font-italic">' + product.price + '</div>' +
-                '</td>' +
-                '<td class="text-center align-middle to-center">' +
-                    '<buttton class="btn btn-primary mr-2 product-edit-btn" product="' + prodId + '">Edit</buttton>' +
-                    '<buttton class="btn btn-primary product-delete-btn" product="' + prodId + '">Delete</buttton>' +
-                '</td>'
-            );
-
-            $('.products-listing .all-products-table').append(tableRow);
+            html += '<tr>';
+            html += '<td class="align-middle">';
+            html += '<img src="' + product.image + '"' + ' alt="">';
+            html += '</td>';
+            html += '<td class="align-middle">';
+            html += '<h5 class="font-weight-bold mb-2">' + product.title + '</h5>';
+            html += '<div class="font-weight-normal mb-2">' + (product.description || '') + '</div>';
+            html += '<div class="font-italic">' + product.price + '</div>';
+            html += '</td>';
+            html += '<td class="text-center align-middle to-center">';
+            html += '<buttton class="btn btn-primary mr-2 product-edit-btn" product="' + prodId + '">Edit</buttton>';
+            html += '<buttton class="btn btn-primary product-delete-btn" product="' + prodId + '">Delete</buttton>';
+            html += '</td>';
+            html += '</tr>';
         });
 
-        $('.products-listing .all-products-table .product-delete-btn').click(function() {
-            const prodId = $(this).attr('product');
+        productsTable.html(html);
+
+        productsTable.find('.product-delete-btn').click(function() {
+            var prodId = $(this).attr('product');
             deleteProduct(prodId);
         });
 
-        $('.products-listing .all-products-table .product-edit-btn').click(function() {
-            let prodId = $(this).attr('product');
+        productsTable.find('.product-edit-btn').click(function() {
+            var prodId = $(this).attr('product');
             window.location.href = '/products/' + prodId + '/edit/';
         });
     }

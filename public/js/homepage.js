@@ -1,4 +1,6 @@
 $(function () {
+    var navigateBtn = $('.navigate-buttons');
+
     showProductsPage();
 
     /**
@@ -12,7 +14,7 @@ $(function () {
             url: '/add_to_cart/' + productId,
         })
         .done(function() {
-            $('.products-list-table .products-table .product-row[product="' + productId + '"]').remove();
+            showProductsPage();
         })
     }
 
@@ -27,7 +29,7 @@ $(function () {
             url:'/remove_from_cart/' + productId,
         })
         .done(function() {
-            $('.products-list-table .products-table .product-row[product="' + productId + '"]').remove();
+            showCartPage();
         })
     }
 
@@ -66,8 +68,8 @@ $(function () {
      * @param page
      */
     function show(products, page) {
-        let title = $('.index-title');
-        let content = $('.products-list-table');
+        var content = $('.products-list-table');
+        var title = $('.index-title');
 
         title.empty();
         content.empty();
@@ -78,9 +80,8 @@ $(function () {
             title.html('Cart');
         }
 
-        $('.index-cart-btn').remove();
-
-        setChangeBtn(page);
+        navigateBtn.find('.index-cart-btn').remove();
+        setNavigateBtn(page);
 
         if (products.length === 0) {
             content.append('<div>There are no products</div>');
@@ -88,37 +89,39 @@ $(function () {
             return;
         }
 
-        $('.products-list-table .products-table').remove();
-
+        content.find('products-table').remove();
         content.append($('<table class="table products-table"></table>'));
+
+        var productsTable = content.find('.products-table');
+        var html = '';
 
         products.forEach(function (product) {
             if (product.image === '') {
                 product.image = '/img/missing-image.png';
             }
 
-            const prodId = product.id;
-            const btnName = page === 'index' ? 'Add to cart' : 'Remove from cart';
+            var prodId = product.id;
+            var btnName = page === 'index' ? 'Add to cart' : 'Remove from cart';
 
-            let tableRow = $('<tr class="product-row" product="' + prodId + '">').append(
-                '<td class="align-middle">' +
-                    '<img src="' + product.image + '"' + ' alt="">' +
-                '</td>' +
-                '<td class="align-middle">' +
-                    '<h5 class="font-weight-bold mb-2">' + product.title + '</h5>' +
-                    '<div class="font-weight-normal mb-2">' + product.description + '</div>' +
-                    '<div class="font-italic">' + product.price + '</div>' +
-                '</td>' +
-                '<td class="text-center align-middle to-center">' +
-                    '<buttton class="btn btn-primary product-btn" product="' + prodId + '">' + btnName + '</buttton>' +
-                '</td>'
-            );
-
-            $('.products-list-table .products-table').append(tableRow);
+            html += '<tr>';
+            html += '<td class="align-middle">';
+            html += '<img src="' + product.image + '"' + ' alt="">';
+            html += '</td>';
+            html += '<td class="align-middle">';
+            html += '<h5 class="font-weight-bold mb-2">' + product.title + '</h5>';
+            html += '<div class="font-weight-normal mb-2">' + (product.description || '') + '</div>';
+            html += '<div class="font-italic">' + product.price + '</div>';
+            html += '</td>';
+            html += '<td class="text-center align-middle to-center">';
+            html += '<buttton class="btn btn-primary mr-2 product-btn" product="' + prodId + '">' + btnName + '</buttton>';
+            html += '</td>';
+            html += '</tr>';
         });
 
-        $('.products-table .product-btn').click(function() {
-            let prodId = $(this).attr('product');
+        productsTable.html(html);
+
+        productsTable.find('.product-btn').click(function() {
+            var prodId = $(this).attr('product');
 
             if (page === 'index') {
                 addToCart(prodId);
@@ -133,12 +136,12 @@ $(function () {
      *
      * @param page
      */
-    function setChangeBtn(page) {
-        const goToBtn = page === 'index' ? 'Go to cart' : 'Show products';
+    function setNavigateBtn(page) {
+        var goToBtn = page === 'index' ? 'Go to cart' : 'Show products';
 
-        $('.products-list-table').after($('<button class="btn btn-primary index-cart-btn">' + goToBtn + '</button>'));
+        navigateBtn.append($('<button class="btn btn-primary index-cart-btn">' + goToBtn + '</button>'));
 
-        $('.index-cart-btn').click(function() {
+        navigateBtn.find('.index-cart-btn').click(function() {
             if (page === 'index' ) {
                 showCartPage();
             } else {

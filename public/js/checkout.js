@@ -26,11 +26,7 @@ $(function () {
             url:'/remove_from_cart/' + productId,
         })
         .done(function() {
-            $('.products-in-cart .products-in-cart-table .product-row[product="' + productId + '"]').remove();
-
-            if ($('.products-in-cart .products-in-cart-table .product-row[product]').length === 0) {
-                $('.checkout').remove();
-            }
+            showCartPage();
         })
     }
 
@@ -40,53 +36,63 @@ $(function () {
      * @param products
      */
     function show(products) {
+        var checkout = $('.checkout');
+        var content = $('.products-in-cart');
+
+        content.find('.products-in-cart-table').remove();
 
         if (products.length === 0) {
-            $('.products-in-cart').append('<div>There are no products</div>');
+            content.append('<div>There are no products</div>');
+
+            checkout.addClass('d-none');
 
             return;
+
         }
 
-        $('.products-in-cart').append($('<table class="table products-in-cart-table"></table>'));
+        content.append($('<table class="table products-in-cart-table"></table>'));
 
-        $('.products-in-cart .products-in-cart-table').empty();
+        var productsTable = content.find('.products-in-cart-table');
+        var html;
 
         products.forEach(function (product) {
             if (product.image === '') {
                 product.image = '/img/missing-image.png';
             }
 
-            const prodId = product.id;
+            var prodId = product.id;
 
-            let tableRow = $('<tr class="product-row" product="' + prodId + '">').append(
-                '<td class="align-middle">' +
-                    '<img src="' + product.image + '"' + ' alt="">' +
-                '</td>' +
-                '<td class="align-middle">' +
-                    '<h5 class="font-weight-bold mb-2">' + product.title + '</h5>' +
-                    '<div class="font-weight-normal mb-2">' + (product.description || '') + '</div>' +
-                    '<div class="font-italic">' + product.price + '</div>' +
-                '</td>' +
-                '<td class="text-center align-middle to-center">' +
-                    '<buttton class="btn btn-primary mr-2 product-remove-btn" product="' + prodId + '">Remove from cart</buttton>' +
-                '</td>'
-            );
-
-            $('.products-in-cart .products-in-cart-table').append(tableRow);
+            html += '<tr>';
+            html += '<td class="align-middle">';
+            html += '<img src="' + product.image + '"' + ' alt="">';
+            html += '</td>';
+            html += '<td class="align-middle">';
+            html += '<h5 class="font-weight-bold mb-2">' + product.title + '</h5>';
+            html += '<div class="font-weight-normal mb-2">' + (product.description || '') + '</div>';
+            html += '<div class="font-italic">' + product.price + '</div>';
+            html += '</td>';
+            html += '<td class="text-center align-middle to-center">';
+            html += '<buttton class="btn btn-primary mr-2 product-remove-btn" product="' + prodId + '">Remove from cart</buttton>';
+            html += '</td>';
+            html += '</tr>';
         });
 
-        $('.products-in-cart .products-in-cart-table .product-remove-btn').click(function() {
-            let prodId = $(this).attr('product');
+        productsTable.html(html);
+
+        productsTable.find('.product-remove-btn').click(function() {
+            var prodId = $(this).attr('product');
             removeFromCart(prodId);
         });
 
-        $('.checkout').removeClass('d-none');
+        checkout.removeClass('d-none');
 
-        $('.checkout .checkout-form').submit(function(e) {
+        var checkoutForm = checkout.find('.checkout-form');
+
+        checkoutForm.submit(function(e) {
             e.preventDefault();
 
-            let formData = new FormData(this);
-            let token = $('.checkout .checkout-form [name="_token"]').val();
+            var formData = new FormData(this);
+            var token = checkoutForm.find('[name="_token"]').val();
 
             $.ajax({
                 url: '/cart_checkout',
@@ -102,14 +108,14 @@ $(function () {
             .done(function(response) {
                 if (response.error) {
                     response.error.forEach(function (error) {
-                        let msg = $('<div class="alert alert-danger d-none"></div>');
+                        var msg = $('<div class="alert alert-danger d-none"></div>');
 
                         if (error.indexOf('name') !== -1) {
-                            $('.checkout .checkout-form input[name="name"]').after(msg);
+                            checkoutForm.find('input[name="name"]').after(msg);
                         }
 
                         if (error.indexOf('email') !== -1) {
-                            $('.checkout .checkout-form input[name="email"]').after(msg);
+                            checkoutForm.find('input[name="email"]').after(msg);
                         }
 
                         msg.append(error);
