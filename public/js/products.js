@@ -1,4 +1,6 @@
 $(function () {
+    var content = $('.products-listing');
+
     showProductsPage();
 
     /**
@@ -21,7 +23,7 @@ $(function () {
      * @param productId
      */
     function deleteProduct(productId) {
-        var token = $('.products-listing [name="_token"]').val();
+        var token = content.find('[name="_token"]').val();
 
         $.ajax({
             type:'DELETE',
@@ -42,7 +44,6 @@ $(function () {
      */
     function show(products) {
         var title = $('.admin-title');
-        var content = $('.products-listing');
 
         title.html('All products');
 

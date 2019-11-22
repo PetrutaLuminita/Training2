@@ -69,7 +69,7 @@ $(function () {
         productForm.submit(function(e) {
             e.preventDefault();
 
-            var token = productForm.find('[name="_token"]').val();;
+            var token = productForm.find('[name="_token"]').val();
             var formData = new FormData(this);
             var url;
 
@@ -112,7 +112,7 @@ $(function () {
             })
         });
 
-        $('.back-to-products').click(function() {
+        $('.edit-product-form .back-to-products').click(function() {
             window.location.href = '/products';
         });
     }
