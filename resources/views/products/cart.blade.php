@@ -23,8 +23,14 @@
                 @csrf
 
                 <input class="input form-control" type="text" placeholder="{{ __('Name') }}" name="name">
+                @component('partials.error', ['fieldName' => 'name']) @endcomponent
+
                 <input class="input form-control" type="text" placeholder="{{ __('Email') }}" name="email">
+                @component('partials.error', ['fieldName' => 'email']) @endcomponent
+
                 <textarea class="textarea form-control" placeholder="{{ __('Comments') }}" name="comments"></textarea>
+                @component('partials.error', ['fieldName' => 'comments']) @endcomponent
+
                 <button class="btn btn-primary mt-2" type="submit">{{ __('Checkout') }}</button>
             </form>
     </div>

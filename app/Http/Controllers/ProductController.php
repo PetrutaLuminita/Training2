@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CheckoutRequest;
 use App\Mail\Order;
 use App\Product;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -103,32 +102,22 @@ class ProductController extends Controller
     /**
      * Check if the input for the email is correct and send the email
      *
-     * @param Request $request
+     * @param CheckoutRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function checkout(Request $request)
+    public function checkout(CheckoutRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'comments' => 'nullable'
-        ]);
-
+        $validData = $request->validated();
         $products = Product::query()->whereIn('id', session('cart'))->get();
 
-        if ($validator->passes()) {
-            Mail::to(config('app.manager_email'))->send(new Order(
-                $products,
-                $request->get('name'),
-                $request->get('email'),
-                $request->get('comments')
-            ));
+        Mail::to(config('app.manager_email'))->send(new Order(
+            $products,
+            $validData['name'],
+            $validData['email'],
+            $validData['comments']
+        ));
+        session()->forget('cart');
 
-            session()->forget('cart');
-
-            return response()->json(['success' => 'Success!']);
-        }
-
-        return response()->json(['error' => $validator->errors()->all()]);
+        return redirect()->route('product.index');
     }
 }

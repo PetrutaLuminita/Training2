@@ -85,46 +85,5 @@ $(function () {
         });
 
         checkout.removeClass('d-none');
-
-        var checkoutForm = checkout.find('.checkout-form');
-
-        checkoutForm.submit(function(e) {
-            e.preventDefault();
-
-            var formData = new FormData(this);
-            var token = checkoutForm.find('[name="_token"]').val();
-
-            $.ajax({
-                url: '/cart_checkout',
-                type: 'post',
-                data: formData,
-                dataType: 'json',
-                contentType:false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': token
-                }
-            })
-            .done(function(response) {
-                if (response.error) {
-                    response.error.forEach(function (error) {
-                        var msg = $('<div class="alert alert-danger d-none"></div>');
-
-                        if (error.indexOf('name') !== -1) {
-                            checkoutForm.find('input[name="name"]').after(msg);
-                        }
-
-                        if (error.indexOf('email') !== -1) {
-                            checkoutForm.find('input[name="email"]').after(msg);
-                        }
-
-                        msg.append(error);
-                        msg.removeClass('d-none');
-                    })
-                } else {
-                    window.location.href = '/';
-                }
-            })
-        });
     }
 });

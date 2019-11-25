@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ValidateProductRequest;
 use App\Product;
 use Exception;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ProductAdminController extends Controller
@@ -28,17 +27,17 @@ class ProductAdminController extends Controller
      */
     public function create()
     {
-        return $this->edit();
+        return $this->edit(new Product());
     }
 
     /**
      * Persist the new product in the DB
      *
-     * @param Request $request
+     * @param ValidateProductRequest $request
      * @param Product $product
      * @return string
      */
-    public function store(Request $request, Product $product)
+    public function store(ValidateProductRequest $request, Product $product)
     {
         return $this->save($request, $product);
     }
@@ -49,7 +48,7 @@ class ProductAdminController extends Controller
      * @param Product $product
      * @return Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function edit(Product $product = null)
+    public function edit(Product $product)
     {
         return view('admin.edit', compact('product'));
     }
@@ -57,11 +56,11 @@ class ProductAdminController extends Controller
     /**
      * Update the selected product
      *
-     * @param Request $request
+     * @param ValidateProductRequest $request
      * @param Product $product
      * @return string
      */
-    public function update(Request $request, Product $product)
+    public function update(ValidateProductRequest $request, Product $product)
     {
         return $this->save($request, $product);
     }
@@ -105,43 +104,27 @@ class ProductAdminController extends Controller
     /**
      * Persist the new product or the edited one
      *
-     * @param Request $request
+     * @param ValidateProductRequest $request
      * @param Product $product
-     * @return string
+     * @return array|\Illuminate\Contracts\Translation\Translator|null|string
      */
-    public function save(Request $request, Product $product)
+    public function save(ValidateProductRequest $request, Product $product)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'description' => 'nullable',
-            'price' => 'required|numeric',
-            'image' => 'nullable',
-        ]);
+        $validData = $request->validated();
 
-        if ($validator->passes()) {
-            if (!$product) {
-                $product = new Product();
+        $product->fill($validData);
+        $product->save();
+
+        if ($request->hasFile('image')) {
+            $fileName = $product->getKey() . '.' . $request->file('image')->getClientOriginalExtension();
+            // save image in storage
+            if ($request->file('image')->storeAs('public/images', $fileName)) {
+                // save product image
+                $product->image_path = $fileName;
+                $product->save();
             }
-
-            $product->title = $request->get('title');
-            $product->description = $request->get('description');
-            $product->price = $request->get('price');
-
-            $product->save();
-
-            if ($request->hasFile('image')) {
-                $fileName = $product->getKey() . '.' . $request->file('image')->getClientOriginalExtension();
-
-                // save image in storage
-                if ($request->file('image')->storeAs('public/images', $fileName)) {
-                    // save product image
-                    $product->image_path = $fileName;
-                    $product->save();
-                }
-            }
-            return response()->json(['success'=>'Success!']);
-        } else {
-            return response()->json(['error'=>$validator->errors()->all()]);
         }
+
+        return redirect()->route('products.index');
     }
 }

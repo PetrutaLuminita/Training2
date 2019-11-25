@@ -1,12 +1,15 @@
 $(function () {
     var productForm = $('.edit-product-form .form');
-    var prodId = productForm.find('.with-token').attr('product');
+    var prodId = productForm.attr('product');
 
-    if (prodId !== '') {
+    console.log(prodId);
+
+    if (prodId) {
         getProduct(prodId);
     } else {
         addOrEditProductForm();
     }
+
     /**
      * Get the details of the selected product from the DB
      *
@@ -46,8 +49,6 @@ $(function () {
             productPrice = product.price;
             productImg = product.image;
             productId = product.id;
-
-            productForm.append('<input type="hidden" name="_method" value="PUT">');
         }
 
         productForm.find('.prod-title').val(productTitle);
@@ -65,52 +66,6 @@ $(function () {
         }
 
         showImage.insertBefore(productForm.find('.product-btn'));
-
-        productForm.submit(function(e) {
-            e.preventDefault();
-
-            var token = productForm.find('[name="_token"]').val();
-            var formData = new FormData(this);
-            var url;
-
-            if (productId === '') {
-                url = '/products';
-            } else {
-                url = '/products/' + productId;
-            }
-
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: formData,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': token
-                }
-            })
-            .done(function(response) {
-                if (response.error) {
-                    response.error.forEach(function (error) {
-                        var msg = $('<div class="alert alert-danger d-none"></div>');
-
-                        if (error.indexOf('title') !== -1) {
-                            productForm.find('input[name="title"]').after(msg);
-                        }
-
-                        if (error.indexOf('price') !== -1) {
-                            productForm.find('input[name="price"]').after(msg);
-                        }
-
-                        msg.append(error);
-                        msg.removeClass('d-none');
-                    })
-                } else {
-                    window.location.href = '/products';
-                }
-            })
-        });
 
         $('.edit-product-form .back-to-products').click(function() {
             window.location.href = '/products';
