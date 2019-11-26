@@ -91,7 +91,7 @@ $(function () {
                 var responseObj = JSON.parse(response.responseText);
                 var errors = responseObj.errors;
 
-                for( key in errors) {
+                for ( key in errors) {
                     errors[key].forEach(function(error) {
                         $('<div class="help-is-danger err">' + error + '</div>')
                             .insertAfter(productForm.find('input[name="' + key + '"]'));
