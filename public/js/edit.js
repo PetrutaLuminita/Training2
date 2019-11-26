@@ -61,6 +61,7 @@ $(function () {
 
         btnSubmit.click(function(e) {
             e.preventDefault();
+            productForm.find('.err').remove();
 
             var token = productForm.find('[name="_token"]').val();
             var formData = new FormData(productForm[0]);
@@ -87,31 +88,14 @@ $(function () {
                 window.location.href = '/products';
             })
             .fail(function(response) {
-                var responseArray = JSON.parse(response.responseText);
-                var errors = responseArray.errors;
+                var responseObj = JSON.parse(response.responseText);
+                var errors = responseObj.errors;
 
-                if (errors.title) {
-                    productForm.find('.title-err')
-                        .html(errors.title[0])
-                        .removeClass('d-none');
-                }
-
-                if (errors.price) {
-                    productForm.find('.price-err')
-                        .html(errors.price[0])
-                        .removeClass('d-none');
-                }
-
-                if (errors.description) {
-                    productForm.find('.desc-err')
-                        .html(errors.description[0])
-                        .removeClass('d-none');
-                }
-
-                if (errors.image) {
-                    productForm.find('.image-err')
-                        .html(errors.image[0])
-                        .removeClass('d-none');
+                for( key in errors) {
+                    errors[key].forEach(function(error) {
+                        $('<div class="help-is-danger err">' + error + '</div>')
+                            .insertAfter(productForm.find('input[name="' + key + '"]'));
+                    })
                 }
             })
         });

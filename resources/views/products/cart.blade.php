@@ -23,14 +23,8 @@
                 @csrf
 
                 <input class="input form-control" type="text" placeholder="{{ __('Name') }}" name="name">
-                <div class="help-is-danger d-none name-err"></div>
-
                 <input class="input form-control" type="text" placeholder="{{ __('Email') }}" name="email">
-                <div class="help-is-danger d-none email-err"></div>
-
                 <textarea class="textarea form-control" placeholder="{{ __('Comments') }}" name="comments"></textarea>
-                <div class="help-is-danger d-none comments-err"></div>
-
                 <button class="btn btn-primary mt-2 checkout-btn" type="submit">{{ __('Checkout') }}</button>
             </form>
     </div>

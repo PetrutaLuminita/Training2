@@ -88,6 +88,7 @@ $(function () {
 
         btnCheckout.click(function(e) {
             e.preventDefault();
+            checkoutForm.find('.err').remove();
 
             var formData = new FormData(checkoutForm[0]);
             var token = checkoutForm.find('[name="_token"]').val();
@@ -107,25 +108,14 @@ $(function () {
                 window.location.href = '/';
             })
             .fail(function (response) {
-                var responseArray = JSON.parse(response.responseText);
-                var errors = responseArray.errors;
+                var responseObj = JSON.parse(response.responseText);
+                var errors = responseObj.errors;
 
-                if (errors.name) {
-                    checkoutForm.find('.name-err')
-                        .html(errors.name[0])
-                        .removeClass('d-none');
-                }
-
-                if (errors.email) {
-                    checkoutForm.find('.email-err')
-                        .html(errors.email[0])
-                        .removeClass('d-none');
-                }
-
-                if (errors.comments) {
-                    checkoutForm.find('.comments-err')
-                        .html(errors.comments[0])
-                        .removeClass('d-none');
+                for( key in errors) {
+                    errors[key].forEach(function(error) {
+                        $('<div class="help-is-danger err">' + error + '</div>')
+                            .insertAfter(checkoutForm.find('input[name="' + key + '"]'));
+                    })
                 }
             })
         });

@@ -22,17 +22,9 @@
             <?php endif ?>
 
             <input class="input form-control mb-2 prod-title" type="text" placeholder="{{ __('Title') }}" name="title">
-            <div class="help-is-danger d-none title-err"></div>
-
             <textarea class="textarea form-control mb-2 prod-description" placeholder="{{ __('Description') }}" name="description"></textarea>
-            <div class="help-is-danger d-none desc-err"></div>
-
             <input class="input form-control prod-price" type="text" placeholder="{{ __('Price') }}" name="price">
-            <div class="help-is-danger d-none price-err"></div>
-
             <input class="input form control text-left mb-2 prod-image" type="file" name="image"><br>
-            <div class="help-is-danger d-none image-err"></div>
-
             <button class="btn btn-primary product-btn" type="submit"></button>
         </form>
 
