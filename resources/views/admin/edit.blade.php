@@ -14,24 +14,24 @@
 
 @section('content')
     <div class="container mt-3 edit-product-form">
-        <form method="POST" action="{{ $product->getKey() ? route('products.update', ['product' => $product->getKey()]) : route('products.store') }}" class="form-group form with-token" enctype="multipart/form-data" product="{{ $product->getKey() }}">
+        <form method="POST" action="" class="form-group form with-token" enctype="multipart/form-data" product="{{ $product->getKey() }}">
             @csrf
 
             <?php if ($product->getKey()) : ?>
-            @method('PUT')
+                @method('PUT')
             <?php endif ?>
 
             <input class="input form-control mb-2 prod-title" type="text" placeholder="{{ __('Title') }}" name="title">
-            @component('partials.error', ['fieldName' => 'title']) @endcomponent
+            <div class="help-is-danger d-none title-err"></div>
 
             <textarea class="textarea form-control mb-2 prod-description" placeholder="{{ __('Description') }}" name="description"></textarea>
-            @component('partials.error', ['fieldName' => 'description']) @endcomponent
+            <div class="help-is-danger d-none desc-err"></div>
 
             <input class="input form-control prod-price" type="text" placeholder="{{ __('Price') }}" name="price">
-            @component('partials.error', ['fieldName' => 'price']) @endcomponent
+            <div class="help-is-danger d-none price-err"></div>
 
             <input class="input form control text-left mb-2 prod-image" type="file" name="image"><br>
-            @component('partials.error', ['fieldName' => 'image']) @endcomponent
+            <div class="help-is-danger d-none image-err"></div>
 
             <button class="btn btn-primary product-btn" type="submit"></button>
         </form>

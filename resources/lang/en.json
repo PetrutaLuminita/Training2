@@ -10,5 +10,7 @@
     "Comments regarding the order" : "Comments regarding the order",
     "Products ordered" : "Products ordered",
     "Order from" : "Order from",
-    "Hello" : "Hello"
+    "Hello" : "Hello",
+    "Product added" : "Product :product was successfully added",
+    "Product removed" : "Product :product was successfully removed"
 }

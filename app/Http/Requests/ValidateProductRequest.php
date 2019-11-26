@@ -26,7 +26,8 @@ class ValidateProductRequest extends FormRequest
         return [
             'title' => 'required',
             'description' => 'nullable',
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
+            'image' => 'image'
         ];
     }
 }

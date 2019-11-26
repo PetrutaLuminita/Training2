@@ -2,8 +2,6 @@ $(function () {
     var productForm = $('.edit-product-form .form');
     var prodId = productForm.attr('product');
 
-    console.log(prodId);
-
     if (prodId) {
         getProduct(prodId);
     } else {
@@ -32,7 +30,8 @@ $(function () {
      */
     function addOrEditProductForm(product) {
         var title = $('.admin-title-edit');
-        var btnName = productTitle = productDesc = productPrice = productImg = productId = '';
+        var btnName = productTitle = productDesc = productPrice = productdImg= productId = '';
+        var btnSubmit = productForm.find('.product-btn');
 
         title.empty();
 
@@ -47,25 +46,75 @@ $(function () {
             productTitle = product.title;
             productDesc = product.description;
             productPrice = product.price;
-            productImg = product.image;
+            productdImg = product.image;
             productId = product.id;
         }
 
         productForm.find('.prod-title').val(productTitle);
         productForm.find('.prod-description').val(productDesc);
         productForm.find('.prod-price').val(productPrice);
-        productForm.find('.prod-image').attr('value', productImg);
-        productForm.find('.product-btn').html(btnName);
+        btnSubmit.html(btnName);
 
-        var showImage;
-
-        if (productImg !== '') {
-            showImage = $('<img src="'+ productImg + '""><br><br>');
-        } else {
-            showImage = $('<div class="text-left">No image uploaded</div><br>');
+        if (productdImg !== '') {
+            $('<img src="' + product.image + '"><br><br>').insertBefore(btnSubmit);
         }
 
-        showImage.insertBefore(productForm.find('.product-btn'));
+        btnSubmit.click(function(e) {
+            e.preventDefault();
+
+            var token = productForm.find('[name="_token"]').val();
+            var formData = new FormData(productForm[0]);
+            var url;
+
+            if (productId === '') {
+                url = '/products';
+            } else {
+                url = '/products/' + productId;
+            }
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                headers: {
+                    'X-CSRF-TOKEN': token
+                }
+            })
+            .done(function () {
+                window.location.href = '/products';
+            })
+            .fail(function(response) {
+                var responseArray = JSON.parse(response.responseText);
+                var errors = responseArray.errors;
+
+                if (errors.title) {
+                    productForm.find('.title-err')
+                        .html(errors.title[0])
+                        .removeClass('d-none');
+                }
+
+                if (errors.price) {
+                    productForm.find('.price-err')
+                        .html(errors.price[0])
+                        .removeClass('d-none');
+                }
+
+                if (errors.description) {
+                    productForm.find('.desc-err')
+                        .html(errors.description[0])
+                        .removeClass('d-none');
+                }
+
+                if (errors.image) {
+                    productForm.find('.image-err')
+                        .html(errors.image[0])
+                        .removeClass('d-none');
+                }
+            })
+        });
 
         $('.edit-product-form .back-to-products').click(function() {
             window.location.href = '/products';

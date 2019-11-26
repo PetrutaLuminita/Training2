@@ -78,7 +78,7 @@ class ProductController extends Controller
             session()->push('cart', $key);
         }
 
-        return __('Product') . ' ' . $product->title . ' ' . __('was successfully added');
+        return __('Product added', ['product' => $product->title]);
     }
 
     /**
@@ -96,14 +96,14 @@ class ProductController extends Controller
             session()->forget('cart.' . $pos);
         }
 
-        return __('Product') . ' ' . $product->title . ' ' . __('was successfully removed');
+        return __('Product removed', ['product' => $product->title]);
     }
 
     /**
      * Check if the input for the email is correct and send the email
      *
      * @param CheckoutRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return array
      */
     public function checkout(CheckoutRequest $request)
     {
@@ -118,6 +118,6 @@ class ProductController extends Controller
         ));
         session()->forget('cart');
 
-        return redirect()->route('product.index');
+        return ['success' => true, 'message' => __('Success')];
     }
 }

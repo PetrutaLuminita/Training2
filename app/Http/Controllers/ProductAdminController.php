@@ -76,7 +76,7 @@ class ProductAdminController extends Controller
     {
         $product->delete();
 
-        return 'Product deleted';
+        return __('Product deleted');
     }
 
 
@@ -125,6 +125,6 @@ class ProductAdminController extends Controller
             }
         }
 
-        return redirect()->route('products.index');
+        return ['success' => true, 'message' => __('Success')];
     }
 }

@@ -47,7 +47,6 @@ $(function () {
             checkout.addClass('d-none');
 
             return;
-
         }
 
         content.append($('<table class="table products-in-cart-table"></table>'));
@@ -60,20 +59,18 @@ $(function () {
                 product.image = '/img/missing-image.png';
             }
 
-            var prodId = product.id;
-
             html += '<tr>';
-            html += '<td class="align-middle">';
-            html += '<img src="' + product.image + '"' + ' alt="">';
-            html += '</td>';
-            html += '<td class="align-middle">';
-            html += '<h5 class="font-weight-bold mb-2">' + product.title + '</h5>';
-            html += '<div class="font-weight-normal mb-2">' + (product.description || '') + '</div>';
-            html += '<div class="font-italic">' + product.price + '</div>';
-            html += '</td>';
-            html += '<td class="text-center align-middle to-center">';
-            html += '<buttton class="btn btn-primary mr-2 product-remove-btn" product="' + prodId + '">Remove from cart</buttton>';
-            html += '</td>';
+            html +=     '<td class="align-middle">';
+            html +=         '<img src="' + product.image + '"' + ' alt="">';
+            html +=     '</td>';
+            html +=     '<td class="align-middle">';
+            html +=         '<h5 class="font-weight-bold mb-2">' + product.title + '</h5>';
+            html +=         '<div class="font-weight-normal mb-2">' + (product.description || '') + '</div>';
+            html +=         '<div class="font-italic">' + product.price + '</div>';
+            html +=     '</td>';
+            html +=     '<td class="text-center align-middle to-center">';
+            html +=         '<buttton class="btn btn-primary mr-2 product-remove-btn" product="' + product.id + '">Remove from cart</buttton>';
+            html +=     '</td>';
             html += '</tr>';
         });
 
@@ -85,5 +82,52 @@ $(function () {
         });
 
         checkout.removeClass('d-none');
+
+        var checkoutForm = checkout.find('.checkout-form');
+        var btnCheckout = checkoutForm.find('.checkout-btn');
+
+        btnCheckout.click(function(e) {
+            e.preventDefault();
+
+            var formData = new FormData(checkoutForm[0]);
+            var token = checkoutForm.find('[name="_token"]').val();
+
+            $.ajax({
+                url: '/cart',
+                type: 'post',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                headers: {
+                    'X-CSRF-TOKEN': token
+                }
+            })
+            .done(function (response) {
+                window.location.href = '/';
+            })
+            .fail(function (response) {
+                var responseArray = JSON.parse(response.responseText);
+                var errors = responseArray.errors;
+
+                if (errors.name) {
+                    checkoutForm.find('.name-err')
+                        .html(errors.name[0])
+                        .removeClass('d-none');
+                }
+
+                if (errors.email) {
+                    checkoutForm.find('.email-err')
+                        .html(errors.email[0])
+                        .removeClass('d-none');
+                }
+
+                if (errors.comments) {
+                    checkoutForm.find('.comments-err')
+                        .html(errors.comments[0])
+                        .removeClass('d-none');
+                }
+            })
+        });
     }
 });

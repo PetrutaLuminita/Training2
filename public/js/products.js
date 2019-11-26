@@ -64,21 +64,19 @@ $(function () {
                 product.image = '/img/missing-image.png';
             }
 
-            var prodId = product.id;
-
             html += '<tr>';
-            html += '<td class="align-middle">';
-            html += '<img src="' + product.image + '"' + ' alt="">';
-            html += '</td>';
-            html += '<td class="align-middle">';
-            html += '<h5 class="font-weight-bold mb-2">' + product.title + '</h5>';
-            html += '<div class="font-weight-normal mb-2">' + (product.description || '') + '</div>';
-            html += '<div class="font-italic">' + product.price + '</div>';
-            html += '</td>';
-            html += '<td class="text-center align-middle to-center">';
-            html += '<buttton class="btn btn-primary mr-2 product-edit-btn" product="' + prodId + '">Edit</buttton>';
-            html += '<buttton class="btn btn-primary product-delete-btn" product="' + prodId + '">Delete</buttton>';
-            html += '</td>';
+            html +=     '<td class="align-middle">';
+            html +=         '<img src="' + product.image + '"' + ' alt="">';
+            html +=     '</td>';
+            html +=     '<td class="align-middle">';
+            html +=         '<h5 class="font-weight-bold mb-2">' + product.title + '</h5>';
+            html +=         '<div class="font-weight-normal mb-2">' + (product.description || '') + '</div>';
+            html +=         '<div class="font-italic">' + product.price + '</div>';
+            html +=     '</td>';
+            html +=     '<td class="text-center align-middle to-center">';
+            html +=         '<buttton class="btn btn-primary mr-2 product-edit-btn" product="' + product.id + '">Edit</buttton>';
+            html +=         '<buttton class="btn btn-primary product-delete-btn" product="' + product.id + '">Delete</buttton>';
+            html +=     '</td>';
             html += '</tr>';
         });
 
