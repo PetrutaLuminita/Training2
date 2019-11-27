@@ -43,7 +43,7 @@ $(function () {
         var html;
 
         content.find('.products-in-cart-table').remove();
-        if (products.length === 0) {
+        if (!products.length) {
 
             content.append('<div>There are no products</div>');
 
@@ -88,7 +88,7 @@ $(function () {
     checkoutForm.submit(function(e) {
         e.preventDefault();
 
-        checkoutForm.find('.err').remove();
+        checkoutForm.find('.err').empty();
 
         var formData = new FormData(this);
         var token = checkoutForm.find('[name="_token"]').val();
@@ -109,13 +109,21 @@ $(function () {
         })
         .fail(function (response) {
             var responseObj = JSON.parse(response.responseText);
+            var message = responseObj.message;
             var errors = responseObj.errors;
 
-            for (key in errors) {
-                errors[key].forEach(function(error) {
-                    $('<div class="help-is-danger err">' + error + '</div>')
-                        .insertAfter(checkoutForm.find('input[name="' + key + '"]'));
-                })
+            checkout.find('.message-error').html(message).removeClass('d-none');
+
+            if (errors) {
+                for (var key in errors) {
+                    errors[key].forEach(function (error) {
+                        var divErrors = $('<div class="help-is-danger err">' + error + '</div>');
+
+                        if (!divErrors.length || divErrors.val() !== error) {
+                            divErrors.insertAfter(checkoutForm.find('input[name="' + key + '"]'));
+                        }
+                    })
+                }
             }
         })
     });

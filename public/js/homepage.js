@@ -87,7 +87,7 @@ $(function () {
         navigateBtn.find('.index-cart-btn').remove();
         setNavigateBtn(page);
 
-        if (products.length === 0) {
+        if (!products.length) {
             content.append('<div>There are no products</div>');
 
             return;

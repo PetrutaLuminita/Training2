@@ -19,6 +19,7 @@
     <div class="checkout d-none">
             <h4>{{ __('Contact details') }}</h4>
 
+            <div class="alert alert-danger message-error d-none" role="alert"></div>
             <form method="POST" action="" class="form-group checkout-form">
                 @csrf
 

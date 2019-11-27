@@ -1,5 +1,6 @@
 $(function () {
-    var productForm = $('.edit-product-form .form');
+    var divEditForm = $('.edit-product-form');
+    var productForm = divEditForm.find('.form');
     var prodId = productForm.attr('product');
 
     if (prodId) {
@@ -53,26 +54,25 @@ $(function () {
         productForm.find('.prod-title').val(productTitle);
         productForm.find('.prod-description').val(productDesc);
         productForm.find('.prod-price').val(productPrice);
-        btnSubmit.html(btnName);
+        btnSubmit.html(btnName).removeClass('d-none');
 
         if (productdImg !== '') {
             $('<img src="' + product.image + '"><br><br>').insertBefore(btnSubmit);
         }
     }
 
-    $('.edit-product-form .back-to-products').click(function() {
+    divEditForm.find('.back-to-products').click(function() {
         window.location.href = '/products';
     });
 
     productForm.submit(function(e) {
         e.preventDefault();
 
-        productForm.find('.err').remove();
+        productForm.find('.err').empty();
 
         var token = productForm.find('[name="_token"]').val();
         var formData = new FormData(this);
         var url;
-        console.log('submit function');
 
         if (productId === '') {
             url = '/products';
@@ -96,14 +96,21 @@ $(function () {
         })
         .fail(function(response) {
             var responseObj = JSON.parse(response.responseText);
+            var message = responseObj.message;
             var errors = responseObj.errors;
-            productForm.find('.err').remove();
 
-            for (key in errors) {
-                errors[key].forEach(function(error) {
-                    $('<div class="help-is-danger err">' + error + '</div>')
-                        .insertAfter(productForm.find('input[name="' + key + '"]'));
-                })
+            divEditForm.find('.message-error').html(message).removeClass('d-none');
+
+            if (errors) {
+                for (var key in errors) {
+                    errors[key].forEach(function (error) {
+                        var divErrors = $('<div class="help-is-danger err">' + error + '</div>');
+
+                        if (!divErrors.length || divErrors.val() !== error) {
+                            divErrors.insertAfter(productForm.find('input[name="' + key + '"]'));
+                        }
+                    })
+                }
             }
         })
     });

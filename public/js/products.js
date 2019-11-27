@@ -47,7 +47,7 @@ $(function () {
 
         title.html('All products');
 
-        if (products.length === 0) {
+        if (!products.length) {
             content.append('<div>There are no products</div>');
 
             return;
