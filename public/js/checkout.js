@@ -88,6 +88,7 @@ $(function () {
 
         btnCheckout.click(function(e) {
             e.preventDefault();
+
             checkoutForm.find('.err').remove();
 
             var formData = new FormData(checkoutForm[0]);
@@ -111,7 +112,7 @@ $(function () {
                 var responseObj = JSON.parse(response.responseText);
                 var errors = responseObj.errors;
 
-                for ( key in errors) {
+                for (key in errors) {
                     errors[key].forEach(function(error) {
                         $('<div class="help-is-danger err">' + error + '</div>')
                             .insertAfter(checkoutForm.find('input[name="' + key + '"]'));
