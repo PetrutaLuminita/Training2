@@ -1,4 +1,7 @@
 $(function () {
+    var checkout = $('.checkout');
+    var checkoutForm = checkout.find('.checkout-form');
+
     showCartPage();
 
     /**
@@ -36,23 +39,21 @@ $(function () {
      * @param products
      */
     function show(products) {
-        var checkout = $('.checkout');
         var content = $('.products-in-cart');
+        var html;
 
         content.find('.products-in-cart-table').remove();
-
         if (products.length === 0) {
+
             content.append('<div>There are no products</div>');
 
             checkout.addClass('d-none');
 
             return;
+
         }
 
         content.append($('<table class="table products-in-cart-table"></table>'));
-
-        var productsTable = content.find('.products-in-cart-table');
-        var html;
 
         products.forEach(function (product) {
             if (product.image === '') {
@@ -74,51 +75,48 @@ $(function () {
             html += '</tr>';
         });
 
-        productsTable.html(html);
-
-        productsTable.find('.product-remove-btn').click(function() {
-            var prodId = $(this).attr('product');
-            removeFromCart(prodId);
-        });
+        content.find('.products-in-cart-table').html(html);
 
         checkout.removeClass('d-none');
-
-        var checkoutForm = checkout.find('.checkout-form');
-        var btnCheckout = checkoutForm.find('.checkout-btn');
-
-        btnCheckout.click(function(e) {
-            e.preventDefault();
-
-            checkoutForm.find('.err').remove();
-
-            var formData = new FormData(checkoutForm[0]);
-            var token = checkoutForm.find('[name="_token"]').val();
-
-            $.ajax({
-                url: '/cart',
-                type: 'post',
-                data: formData,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': token
-                }
-            })
-            .done(function (response) {
-                window.location.href = '/';
-            })
-            .fail(function (response) {
-                var responseObj = JSON.parse(response.responseText);
-                var errors = responseObj.errors;
-
-                for (key in errors) {
-                    errors[key].forEach(function(error) {
-                        $('<div class="help-is-danger err">' + error + '</div>')
-                            .insertAfter(checkoutForm.find('input[name="' + key + '"]'));
-                    })
-                }
-            })
-        });
     }
+
+    $(document).on('click', '.products-in-cart-table .product-remove-btn', function () {
+        var prodId = $(this).attr('product');
+        removeFromCart(prodId);
+    });
+
+    checkoutForm.submit(function(e) {
+        e.preventDefault();
+
+        checkoutForm.find('.err').remove();
+
+        var formData = new FormData(this);
+        var token = checkoutForm.find('[name="_token"]').val();
+
+        $.ajax({
+            url: '/cart',
+            type: 'post',
+            data: formData,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': token
+            }
+        })
+        .done(function (response) {
+            window.location.href = '/';
+        })
+        .fail(function (response) {
+            var responseObj = JSON.parse(response.responseText);
+            var errors = responseObj.errors;
+
+            for (key in errors) {
+                errors[key].forEach(function(error) {
+                    $('<div class="help-is-danger err">' + error + '</div>')
+                        .insertAfter(checkoutForm.find('input[name="' + key + '"]'));
+                })
+            }
+        })
+    });
 });

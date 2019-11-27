@@ -58,51 +58,53 @@ $(function () {
         if (productdImg !== '') {
             $('<img src="' + product.image + '"><br><br>').insertBefore(btnSubmit);
         }
+    }
 
-        btnSubmit.click(function(e) {
-            e.preventDefault();
+    $('.edit-product-form .back-to-products').click(function() {
+        window.location.href = '/products';
+    });
 
+    productForm.submit(function(e) {
+        e.preventDefault();
+
+        productForm.find('.err').remove();
+
+        var token = productForm.find('[name="_token"]').val();
+        var formData = new FormData(this);
+        var url;
+        console.log('submit function');
+
+        if (productId === '') {
+            url = '/products';
+        } else {
+            url = '/products/' + productId;
+        }
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: formData,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': token
+            }
+        })
+        .done(function () {
+            window.location.href = '/products';
+        })
+        .fail(function(response) {
+            var responseObj = JSON.parse(response.responseText);
+            var errors = responseObj.errors;
             productForm.find('.err').remove();
 
-            var token = productForm.find('[name="_token"]').val();
-            var formData = new FormData(productForm[0]);
-            var url;
-
-            if (productId === '') {
-                url = '/products';
-            } else {
-                url = '/products/' + productId;
+            for (key in errors) {
+                errors[key].forEach(function(error) {
+                    $('<div class="help-is-danger err">' + error + '</div>')
+                        .insertAfter(productForm.find('input[name="' + key + '"]'));
+                })
             }
-
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: formData,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': token
-                }
-            })
-            .done(function () {
-                window.location.href = '/products';
-            })
-            .fail(function(response) {
-                var responseObj = JSON.parse(response.responseText);
-                var errors = responseObj.errors;
-
-                for (key in errors) {
-                    errors[key].forEach(function(error) {
-                        $('<div class="help-is-danger err">' + error + '</div>')
-                            .insertAfter(productForm.find('input[name="' + key + '"]'));
-                    })
-                }
-            })
-        });
-
-        $('.edit-product-form .back-to-products').click(function() {
-            window.location.href = '/products';
-        });
-    }
+        })
+    });
 });

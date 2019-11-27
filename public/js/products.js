@@ -81,15 +81,15 @@ $(function () {
         });
 
         productsTable.html(html);
-
-        productsTable.find('.product-delete-btn').click(function() {
-            var prodId = $(this).attr('product');
-            deleteProduct(prodId);
-        });
-
-        productsTable.find('.product-edit-btn').click(function() {
-            var prodId = $(this).attr('product');
-            window.location.href = '/products/' + prodId + '/edit/';
-        });
     }
+
+    $(document).on('click', '.all-products-table .product-delete-btn', function () {
+        var prodId = $(this).attr('product');
+        deleteProduct(prodId);
+    });
+
+    $(document).on('click', '.all-products-table .product-edit-btn', function () {
+        var prodId = $(this).attr('product');
+        window.location.href = '/products/' + prodId + '/edit/';
+    });
 });

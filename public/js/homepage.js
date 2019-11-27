@@ -1,5 +1,6 @@
 $(function () {
     var navigateBtn = $('.navigate-buttons');
+    var page;
 
     showProductsPage();
 
@@ -37,13 +38,15 @@ $(function () {
      * Get the products that are not in the session for the index page
      */
     function showProductsPage() {
+        page = 'index';
+
         $.ajax({
             type:'GET',
             url:'/get_products',
             dataType: 'json'
         })
         .done(function(products) {
-            show(products, 'index');
+            show(products, page);
         });
     }
 
@@ -51,13 +54,14 @@ $(function () {
      * Get the products in the session for the cart page
      */
     function showCartPage() {
+        page = 'cart';
         $.ajax({
             type:'GET',
             url:'/get_cart',
             dataType: 'json'
         })
         .done(function(products) {
-            show(products, 'cart');
+            show(products, page);
         });
     }
 
@@ -118,16 +122,6 @@ $(function () {
         });
 
         productsTable.html(html);
-
-        productsTable.find('.product-btn').click(function() {
-            var prodId = $(this).attr('product');
-
-            if (page === 'index') {
-                addToCart(prodId);
-            } else {
-                removeFromCart(prodId);
-            }
-        });
     }
 
     /**
@@ -139,14 +133,24 @@ $(function () {
         var goToBtn = page === 'index' ? 'Go to cart' : 'Show products';
 
         navigateBtn.append($('<button class="btn btn-primary index-cart-btn">' + goToBtn + '</button>'));
-
-        navigateBtn.find('.index-cart-btn').click(function() {
-            if (page === 'index' ) {
-                showCartPage();
-            } else {
-                showProductsPage();
-            }
-        });
     }
+
+    $(document).on('click', '.products-table .product-btn', function () {
+        var prodId = $(this).attr('product');
+
+        if (page === 'index') {
+            addToCart(prodId);
+        } else {
+            removeFromCart(prodId);
+        }
+    });
+
+    $(document).on('click', '.navigate-buttons .index-cart-btn', function () {
+        if (page === 'index' ) {
+            showCartPage();
+        } else {
+            showProductsPage();
+        }
+    });
 });
 
